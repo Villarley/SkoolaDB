@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "tslint -p tsconfig.json -c tslint.json",
+    "build": "tsc",
     "dev:compile": "tsc --watch",
     "dev:start": "nodemon dist/app.js"
   },
@@ -23,6 +24,9 @@
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "pg": "^8.12.0",
+    "reflect-metadata": "^0.2.2",
+    "typeorm": "^0.3.20"
   }
 }

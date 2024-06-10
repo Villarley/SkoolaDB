@@ -32,6 +32,8 @@
     "noPropertyAccessFromIndexSignature": true,
     "allowUnreachableCode": true,
     "skipDefaultLibCheck": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "lib": ["ES6"],
     "types": ["node"]
   },
