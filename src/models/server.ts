@@ -2,7 +2,7 @@ import "reflect-metadata"
 import express, { Application } from "express"
 import cors from "cors"
 import dotenv from "dotenv"
-import AppDataSource from "../ormconfig" // Asegúrate de importar el archivo de configuración
+import AppDataSource from "../ormconfig"
 
 dotenv.config()
 
