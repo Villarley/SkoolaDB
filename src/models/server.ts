@@ -24,7 +24,7 @@ class Server {
     }
 
     private routes() {
-        // this.app.use("/Skoola/Auth", (req, res) => res.send("Auth route"))
+        this.app.use("/Skoola/Auth", (req, res) => res.send("Auth route"))
         // this.app.use("/Skoola/Person", (req, res) => res.send("Person route"))
         // this.app.use("/Skoola/Student", (req, res) => res.send("Student route"))
     }
