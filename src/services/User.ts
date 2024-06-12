@@ -34,6 +34,7 @@ class UserService {
   }
   async createUser(User: User): Promise<User> {
     try {
+        
         return await this.userRepository.save(User)
     } catch (error) {
         throw Error

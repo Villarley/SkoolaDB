@@ -1,5 +1,5 @@
 import dotenv from "dotenv"
-import Server from "./entity/server"
+import Server from "./server"
 import "reflect-metadata"
 
 dotenv.config()
