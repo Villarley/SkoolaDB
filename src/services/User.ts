@@ -1,4 +1,5 @@
 import { User } from "../entity/User"
+import { User as UserInterface } from "../interface/"
 import  DataSource  from "../ormconfig"
 import { Repository } from "typeorm"
 
@@ -9,8 +10,9 @@ class UserService {
     this.userRepository = DataSource.getRepository(User)
   }
 
-  async getAllUsers(): Promise<User[]> {
-    return await this.userRepository.find()
+  async getAllUsers(): Promise<User[] | []> {
+    const users = await this.userRepository.find()
+    return users
   }
 
   async getUserById(Id: string): Promise<User | null> {
@@ -32,13 +34,8 @@ class UserService {
   async getAllUsersWithCount(): Promise<[User[], number]> {
     return await this.userRepository.findAndCount()
   }
-  async createUser(User: User): Promise<User> {
-    try {
-        
+  async createUser(User: UserInterface): Promise<User> {
         return await this.userRepository.save(User)
-    } catch (error) {
-        throw Error
-    }
   }
 }
 

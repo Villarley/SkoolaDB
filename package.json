@@ -4,7 +4,8 @@
   "description": "Skoola, built on Node.js and TypeScript (TS), optimizes teamwork in scholarly projects. It offers secure user management, intuitive project organization, real-time collaboration tools, version control, task tracking, seamless integration with academic tools, and robust security measures. Tailored for efficiency and flexibility, Skoola empowers scholars to collaborate effectively while maintaining control over their projects.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
+    "test:watch": "jest --watchAll",
     "lint": "tslint -p tsconfig.json -c tslint.json",
     "build": "tsc",
     "dev:compile": "tsc --watch",
@@ -29,6 +30,7 @@
     "nodemon": "^3.1.3",
     "pg": "^8.12.0",
     "reflect-metadata": "^0.2.2",
+    "ts-jest": "^29.1.4",
     "typeorm": "^0.3.20",
     "uuid": "^10.0.0"
   }

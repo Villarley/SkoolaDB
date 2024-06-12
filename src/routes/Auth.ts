@@ -16,10 +16,19 @@ router.get("/:Id", (req: Request, res: Response) => {
         res.status(400).json({error: error})
     }
 } )
-
+router.get("/", async(req: Request, res:Response) => {
+    try {
+        const users = await userService.getAllUsers()
+        console.log(users)
+        res.status(200).json({users})
+    } catch (error) {
+        res.status(400).json(error)
+    }
+})
 router.post("/", (req:Request, res:Response) => {
     try {
         const { body } = req
+        console.log(body)
         const user = userService.createUser(body)
         res.status(200).json({res: user})
     } catch (error) {
