@@ -3,12 +3,14 @@ import UserService from "../services/User"
 //Everything uses camelCase
 
 const router = Router()
+const userService = new UserService()
 
 router.get("/:Id", (req: Request, res: Response) => {
     try {
         const { Id } = req.params
-        const user = UserService.getUserById(Id)
-        res.status(200).json({msg: user})
+        // const user = userService.getUserById(Id)
+        // if(!user)throw new Error("User not found")
+        res.status(200).json({msg: Id})
 
     } catch (error) {
         res.status(400).json({error: error})
@@ -18,11 +20,20 @@ router.get("/:Id", (req: Request, res: Response) => {
 router.post("/", (req:Request, res:Response) => {
     try {
         const { body } = req
-        const user = UserService.createUser(body)
+        const user = userService.createUser(body)
         res.status(200).json({res: user})
     } catch (error) {
         res.status(400).json({error: error})
     }
 })
+// router.put("/", (req:Request, res: Response) => {
+//     try {
+//         const { body } = req
+//         const user = userService.updateUser(body)
+//         res.status(200).json({res: user})
+//     } catch (error) {
+//         res.status(400).json({error: error})
+//     }
+// })
 
 export default router

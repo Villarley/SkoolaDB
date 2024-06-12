@@ -1,11 +1,11 @@
 import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert } from "typeorm"
 import { v4 as uuidv4 } from "uuid"
-import { AuthMethodEnum } from "../Enum"
+import { AuthMethodEnum } from "../../Enum"
 
 //Every column needs to be in PascalCase
 
 @Entity()
-export class User {
+class User {
 
     @PrimaryGeneratedColumn("uuid")
     Id: string
@@ -39,3 +39,4 @@ export class User {
     })
     AuthMethod : AuthMethodEnum
 }
+export default User
