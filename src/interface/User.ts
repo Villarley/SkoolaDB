@@ -1,5 +1,5 @@
 import { AuthMethodEnum } from "../Enum"
-class User {
+export interface User {
     Id: string
     Name: string 
     LastName1: string
@@ -8,4 +8,10 @@ class User {
     Password: string
     AuthMethod: AuthMethodEnum
 }
-export default User
+export interface UserInput {
+    Name: string
+    LastName1: string
+    LastName2: string
+    Email: string
+    Password: string
+  }

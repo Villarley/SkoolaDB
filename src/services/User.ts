@@ -1,6 +1,7 @@
 import { User } from "../entity/User"
-import { User as UserInterface } from "../interface/"
+import { UserInput } from "../interface/User"
 import  DataSource  from "../ormconfig"
+import * as bcrypt from "bcrypt"
 import { Repository } from "typeorm"
 
 class UserService {
@@ -34,8 +35,16 @@ class UserService {
   async getAllUsersWithCount(): Promise<[User[], number]> {
     return await this.userRepository.findAndCount()
   }
-  async createUser(User: UserInterface): Promise<User> {
-        return await this.userRepository.save(User)
+  async createUser(userInput: UserInput): Promise<User> {
+      //hashing password
+      const hashedPassword = await bcrypt.hash(userInput.Password, 10)
+  
+      const user = this.userRepository.create({
+        ...userInput,
+        Password: hashedPassword,
+      })
+  
+      return await this.userRepository.save(user)
   }
 }
 
