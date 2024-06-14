@@ -3,7 +3,7 @@ import express, { Application } from "express"
 import cors from "cors"
 import dotenv from "dotenv"
 import AppDataSource from "./ormconfig"
-import AuthRoute from "./routes/Auth"
+import AuthRoute from "./routes/Auth.route"
 
 dotenv.config()
 
