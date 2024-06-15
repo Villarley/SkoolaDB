@@ -28,14 +28,13 @@ class User {
     @Column()
     Email: string
 
-    @Column()
+    @Column({nullable:true})
     Password: string
 
     @Column({
         type: "enum",
         enum: AuthMethodEnum,
         default: AuthMethodEnum.Plain
-
     })
     AuthMethod : AuthMethodEnum
 }
