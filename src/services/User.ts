@@ -55,7 +55,7 @@ class UserService {
       const hashedPassword = await bcrypt.hash(userInput.Password, 10)
       userInput.Password = hashedPassword
       const user = this.userRepository.create(userInput)
-      console.log(user)
+      this.userRepository.save(user)
       return user
   }
   async login(email: string, password: string): Promise<{ user: User, token: string }> {

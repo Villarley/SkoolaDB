@@ -44,7 +44,7 @@ router.post("/login", async (req: Request, res: Response) => {
     if (user.AuthMethod === "PLAIN") {
       ({ user: loggedUser, token } = await userService.login(email, password))
     } else if (user.AuthMethod === "GOOGLE") {
-      ({ user: loggedUser, token } = await userService.login(email, password))
+      ({ user: loggedUser, token } = await userService.loginWithGoogle(email))
     } else {
       res.status(400).json({ message: "Unsupported authentication method" })
     }
@@ -58,11 +58,12 @@ router.post("/login", async (req: Request, res: Response) => {
 router.post(
   "/",
   validateMiddleware(UserInputDto),
-  (req: Request, res: Response) => {
+  async(req: Request, res: Response) => {
     try {
       const { body } = req
-      const user = userService.createUser(body)
-      res.status(200).json({ res: user })
+      const user = await userService.createUser(body)
+      console.log(user)
+      res.status(200).json( user )
     } catch (error) {
       res.status(400).json({ error: error })
     }
