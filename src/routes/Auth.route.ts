@@ -1,13 +1,14 @@
 import { Router, Request, Response } from "express"
 import UserService from "../services/User"
 import { validateMiddleware } from "../middlewares/validate"
+import { validateJWT } from "../middlewares/validateJwt"
 import { UserInputDto } from "../dto/User"
 //Everything uses camelCase
 
 const router = Router()
 const userService = new UserService()
 
-router.get("/:Id", (req: Request, res: Response) => {
+router.get("/:Id", validateJWT, (req: Request, res: Response) => {
   try {
     const { Id } = req.params
     // const user = userService.getUserById(Id)
@@ -56,13 +57,13 @@ router.post("/login", async (req: Request, res: Response) => {
 })
 
 router.post(
-  "/",
+  "/:Role",
   validateMiddleware(UserInputDto),
   async(req: Request, res: Response) => {
     try {
       const { body } = req
       const user = await userService.createUser(body)
-      console.log(user)
+      
       res.status(200).json( user )
     } catch (error) {
       res.status(400).json({ error: error })

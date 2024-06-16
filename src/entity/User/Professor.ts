@@ -4,7 +4,7 @@ import User from "./User"
 
 
 @Entity()
-export class Professor {
+class Professor {
     @PrimaryGeneratedColumn("uuid")
     Id: string
 
@@ -20,3 +20,4 @@ export class Professor {
     User: User
 
 }
+export default Professor
