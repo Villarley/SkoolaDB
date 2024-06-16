@@ -1,9 +1,9 @@
 import { Repository } from "typeorm"
 import * as bcrypt from "bcrypt"
-import { User } from "../entity/User"
-import { UserInput } from "../interface/User"
-import  DataSource  from "../ormconfig"
-import { generateToken } from "../utils/jwt"
+import { User } from "@/entity/User"
+import { UserInput } from "@/interface/User"
+import  DataSource  from "@/ormconfig"
+import { generateToken } from "@/utils/jwt"
 
 
 class UserService {

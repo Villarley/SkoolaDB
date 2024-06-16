@@ -1,6 +1,6 @@
 import { IsEmail, IsEnum, IsNotEmpty, Length } from "class-validator"
-import { AuthMethodEnum } from "../Enum"
-import { UserInput } from "../interface/User"
+import { AuthMethodEnum } from "@/Enum"
+import { UserInput } from "@/interface/User"
 
 export class UserInputDto implements UserInput {
   @IsNotEmpty()

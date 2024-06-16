@@ -1,8 +1,8 @@
 import { Router, Request, Response } from "express"
-import UserService from "../services/User"
-import { validateMiddleware } from "../middlewares/validate"
-import { validateJWT } from "../middlewares/validateJwt"
-import { UserInputDto } from "../dto/User"
+import UserService from "@/services/User"
+import { validateMiddleware } from "@/middlewares/validate"
+import { validateJWT } from "@/middlewares/validateJwt"
+import { UserInputDto } from "@/dto/User"
 //Everything uses camelCase
 
 const router = Router()
