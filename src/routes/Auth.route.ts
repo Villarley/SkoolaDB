@@ -3,10 +3,21 @@ import UserService from "@/services/User"
 import { validateMiddleware } from "@/middlewares/validate"
 import { validateJWT } from "@/middlewares/validateJwt"
 import { UserInputDto } from "@/dto/User"
-//Everything uses camelCase
+import StudentService from "@/services/Student"
+import ProfessorService from "@/services/Professor"
+//Everything uses camelCase, only the imported services or Dtos are in PascalCase
 
 const router = Router()
 const userService = new UserService()
+const studentService = new StudentService()
+const professorService = new ProfessorService()
+
+
+interface CustomRequest extends Request {
+  params:{
+    Role?: string
+  }
+}
 
 router.get("/:Id", validateJWT, (req: Request, res: Response) => {
   try {
@@ -59,13 +70,20 @@ router.post("/login", async (req: Request, res: Response) => {
 router.post(
   "/:Role",
   validateMiddleware(UserInputDto),
-  async(req: Request, res: Response) => {
+  async(req: CustomRequest, res: Response) => {
     try {
       const { body } = req
+      const { Role } = req.params
+      console.log(Role)
       const user = await userService.createUser(body)
-      
+      if(Role === "professor"){
+        await professorService.createProfessor(user.Id)
+      }else if(Role === "student"){
+        await studentService.createStudent(user.Id)
+      }
       res.status(200).json( user )
     } catch (error) {
+      console.error(error)
       res.status(400).json({ error: error })
     }
   }

@@ -12,7 +12,7 @@
     "dev:start": "nodemon dist/app.js"
   },
 "_moduleAliases": {
-  "@": "dist/src"
+  "@": "dist/"
 },
 
   "keywords": [],
