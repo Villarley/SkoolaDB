@@ -23,6 +23,9 @@ class ProfessorService {
         await this.professorRepository.save(professor)
         return professor
     }
+    async getProfessorByPersonId(personId: string): Promise<Professor | null> {
+        return await this.professorRepository.findOne({ where: { User: { Id: personId } }, relations: ["User"] })
+      }
 }
 
 export default ProfessorService

@@ -1,17 +1,18 @@
 import { Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from "typeorm"
 import { Professor } from "@/entity/User"
-import { Classroom } from "./Classroom"
+import Classroom from "./Classroom"
 
 @Entity()
-export class ClassroomProfessor {
+class ClassroomProfessor {
   @PrimaryGeneratedColumn("uuid")
   Id: string
 
   @ManyToOne(() => Professor, { cascade: true })
   @JoinColumn()
-  ProfessorId: Professor
+  Professor: Professor
 
   @ManyToOne(() => Classroom, { cascade: true })
   @JoinColumn()
-  ClassroomId: Classroom
+  Classroom: Classroom
 }
+export default ClassroomProfessor
