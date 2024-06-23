@@ -1,14 +1,21 @@
 import "reflect-metadata"
+import "module-alias/register"
 import express, { Application } from "express"
 import cors from "cors"
 import dotenv from "dotenv"
-import AppDataSource from "../ormconfig"
+import AppDataSource from "./ormconfig"
+import AuthRoute from "./routes/Auth.route"
 
 dotenv.config()
+
+//everything needs to be written in camelCase
 
 class Server {
     private app: Application
     private port: string
+    private apiPaths = { 
+        auth: "/Skoola/Auth"
+    }
 
     constructor() {
         this.app = express()
@@ -24,7 +31,7 @@ class Server {
     }
 
     private routes() {
-        // this.app.use("/Skoola/Auth", (req, res) => res.send("Auth route"))
+        this.app.use( this.apiPaths.auth , AuthRoute )
         // this.app.use("/Skoola/Person", (req, res) => res.send("Person route"))
         // this.app.use("/Skoola/Student", (req, res) => res.send("Student route"))
     }

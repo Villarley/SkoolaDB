@@ -1,5 +1,6 @@
+import "module-alias/register"
 import dotenv from "dotenv"
-import Server from "./models/server"
+import Server from "./server"
 import "reflect-metadata"
 
 dotenv.config()

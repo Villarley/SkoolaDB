@@ -16,7 +16,7 @@ const AppDataSource = new DataSource({
     rejectUnauthorized: false
   },
   synchronize: true,
-  logging: false,
+  logging:  false,
   entities: ["dist/entity/**/*.js"],
   migrations: ["dist/migration/**/*.js"],
   subscribers: ["dist/subscriber/**/*.js"],
