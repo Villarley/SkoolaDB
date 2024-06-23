@@ -74,9 +74,7 @@ router.post(
     try {
       const { body } = req
       const { Role } = req.params
-      console.log(Role)
       const user = await userService.createUser(body)
-      console.log(user)
       if(Role === "professor"){
         await professorService.createProfessor(user.Id)
       }else if(Role === "student"){

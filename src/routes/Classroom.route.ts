@@ -34,7 +34,7 @@ router.post("/:classroomId/join/:studentId", validateJWT, async (req: JoinClassr
   try {
     const classroom = await classroomService.getClassroomById(classroomId)
     const classroomStudent = await classroomService.joinClassroom(studentId, classroom)
-    res.status(201).json({ message: "Joined classroom successfully", classroomStudent })
+    res.status(201).json( classroomStudent )
   } catch (error: any) {
     res.status(500).json({ message: error.message })
   }
