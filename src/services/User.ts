@@ -4,13 +4,19 @@ import { User } from "@/entity/User"
 import { UserInput } from "@/interface/User"
 import  DataSource  from "@/ormconfig"
 import { generateToken } from "@/utils/jwt"
+import StudentService from "@/services/Student"
+import ProfessorService from "@/services/Professor"
 
 
 class UserService {
   private userRepository: Repository<User>
+  private studentService: StudentService
+  private professorService: ProfessorService
 
   constructor() {
     this.userRepository = DataSource.getRepository(User)
+    this.studentService = new StudentService()
+    this.professorService = new ProfessorService()
   }
 
   async generateToken(user:User):Promise<string>{
@@ -58,20 +64,33 @@ class UserService {
       this.userRepository.save(user)
       return user
   }
-  async login(email: string, password: string): Promise<{ user: User, token: string }> {
+  async login(email: string, password: string): Promise<{ user: User, token: string, roleId: string }> {
     const user = await this.getUserByEmail(email)
 
     if (!user || !(await this.validatePassword(user, password))) {
       throw new Error("Invalid email or password")
     }
     const token = await this.generateToken(user)
-    return { user, token }
+
+    // Fetch role ID (student or professor)
+    const student = await this.studentService.getStudentByPersonId(user.Id)
+    const professor = await this.professorService.getProfessorByPersonId(user.Id)
+    const roleId = student ? student.Id : professor ? professor.Id : "null"
+    console.log(roleId)
+    return { user, token, roleId }
   }
-  async loginWithGoogle(Email: string): Promise<{user:User, token: string}> {
+
+  async loginWithGoogle(Email: string): Promise<{ user: User, token: string, roleId: string }> {
     const user = await this.getUserByEmail(Email)
-    if(!user) throw new Error("User not found")
+    if (!user) throw new Error("User not found")
     const token = await this.generateToken(user)
-    return {user, token}
+
+    // Fetch role ID (student or professor)
+    const student = await this.studentService.getStudentByPersonId(user.Id)
+    const professor = await this.professorService.getProfessorByPersonId(user.Id)
+    const roleId = student ? student.Id : professor ? professor.Id : "null"
+
+    return { user, token, roleId }
   }
 }
 

@@ -52,16 +52,16 @@ router.post("/login", async (req: Request, res: Response) => {
     if (!user) {
       res.status(404).json({ message: "User not found" })
     }
-    let loggedUser, token
+    let loggedUser, token, roleId
     if (user.AuthMethod === "PLAIN") {
-      ({ user: loggedUser, token } = await userService.login(email, password))
+      ({ user: loggedUser, token, roleId } = await userService.login(email, password))
     } else if (user.AuthMethod === "GOOGLE") {
-      ({ user: loggedUser, token } = await userService.loginWithGoogle(email))
+      ({ user: loggedUser, token, roleId } = await userService.loginWithGoogle(email))
     } else {
       res.status(400).json({ message: "Unsupported authentication method" })
     }
 
-    res.status(200).json({ user: loggedUser, token })
+    res.status(200).json({ user: loggedUser, token, roleId  })
   } catch (error: any) {
     res.status(500).json({ message: error.message })
   }
@@ -76,6 +76,7 @@ router.post(
       const { Role } = req.params
       console.log(Role)
       const user = await userService.createUser(body)
+      console.log(user)
       if(Role === "professor"){
         await professorService.createProfessor(user.Id)
       }else if(Role === "student"){
