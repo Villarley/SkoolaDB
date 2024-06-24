@@ -15,4 +15,6 @@ class ClassroomStudent {
   @JoinColumn()
   Classroom: Classroom
 }
+
 export default ClassroomStudent
+
