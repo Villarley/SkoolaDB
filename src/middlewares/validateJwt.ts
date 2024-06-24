@@ -5,7 +5,7 @@ export interface AuthRequest extends Request {
   user?: any
 }
 
-export function validateJWT(req: AuthRequest, res: Response, next: NextFunction) {
+function validateJWT(req: AuthRequest, res: Response, next: NextFunction) {
   const authHeader = req.headers.authorization
 
   if (!authHeader) {
@@ -26,3 +26,4 @@ export function validateJWT(req: AuthRequest, res: Response, next: NextFunction)
     return res.status(401).json({ message: "Invalid or expired token" })
   }
 }
+export default validateJWT

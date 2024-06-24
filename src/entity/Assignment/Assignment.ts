@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from "typeorm"
+import { Classroom } from "@/entity/Classroom/"
 
 @Entity()
 class Assignment {
@@ -10,6 +11,11 @@ class Assignment {
 
   @Column()
   DateToComplete: Date
+  
+  @ManyToOne(() => Classroom, { cascade : true })
+  @JoinColumn()
+  Classroom: Classroom
+
 }
 
 export default Assignment
