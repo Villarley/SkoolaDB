@@ -9,10 +9,12 @@ class ClassroomStudent {
 
   @ManyToOne(() => Student, { cascade: true })
   @JoinColumn()
-  StudentId: Student
+  Student: Student
 
   @ManyToOne(() => Classroom, { cascade: true })
   @JoinColumn()
-  ClassroomId: Classroom
+  Classroom: Classroom
 }
+
 export default ClassroomStudent
+
