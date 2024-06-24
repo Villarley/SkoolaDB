@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
 
 @Entity()
-export class Classroom {
+class Classroom {
   @PrimaryGeneratedColumn("uuid")
   Id: string
 
@@ -14,3 +14,4 @@ export class Classroom {
   @Column()
   Code: string
 }
+export default Classroom

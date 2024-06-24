@@ -1,9 +1,9 @@
 import { Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from "typeorm"
 import { Student } from "@/entity/User"
-import { Classroom } from "./Classroom"
+import Classroom from "./Classroom"
 
 @Entity()
-export class ClassroomStudent {
+class ClassroomStudent {
   @PrimaryGeneratedColumn("uuid")
   Id: string
 
@@ -15,3 +15,4 @@ export class ClassroomStudent {
   @JoinColumn()
   ClassroomId: Classroom
 }
+export default ClassroomStudent
