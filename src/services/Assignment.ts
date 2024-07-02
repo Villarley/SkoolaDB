@@ -27,8 +27,14 @@ class AssignmentService {
   }
 
   async createAssignment(assignment:CreateAssignmentDto):Promise<Assignment>{
+    const parsedDate = new Date(assignment.DateToComplete)
+    if (isNaN(parsedDate.getTime())) {
+      throw new Error("Invalid date format")
+    }
+    assignment.DateToComplete = parsedDate
     const newAssignment = this.assignmentRepository.create(assignment)
     const savedAssignment = await this.assignmentRepository.save(newAssignment)
+    console.log(savedAssignment)
     return savedAssignment
   }
 

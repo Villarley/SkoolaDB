@@ -24,7 +24,8 @@ router.get("/:Id", (req:Request, res:Response) => {
 router.post("/",validateJWT, validateMiddleware(CreateAssignmentDto), async(req:Request, res:Response) => {
     try {
         const assignment = req.body
-        const newAssignment = assignmentService.createAssignment(assignment)
+        const newAssignment = await assignmentService.createAssignment(assignment)
+        console.log(newAssignment)
         res.status(201).json(newAssignment)
     } catch (error) {
         res.status(400).json({ error: error })
