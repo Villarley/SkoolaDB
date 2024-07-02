@@ -41,9 +41,19 @@ class ClassroomService {
     return classroomStudent
   }
 
-  async getClassroomsByStudent(studentId: string): Promise<Classroom[]> {
-    const classroomStudents = await this.classroomStudentRepository.find({ where: { Student: { Id: studentId } }, relations: ["Classroom"] })
-    return classroomStudents.map(cs => cs.Classroom)
+  async getClassroomsByStudent(studentId: string): Promise<{ classroom: {Id:string, Code:string, Name:string, Section:string}, professor: { name: string, surname: string, email: string } }[]> {
+    const classroomStudents = await this.classroomStudentRepository.find({
+      where: { Student: { Id: studentId } },
+      relations: ["Classroom", "Classroom.ClassroomProfessors", "Classroom.ClassroomProfessors.Professor", "Classroom.ClassroomProfessors.Professor.User"]
+    })
+    return classroomStudents.map(cs => ({
+      classroom: {Id:cs.Classroom.Id, Code: cs.Classroom.Code, Name:cs.Classroom.Name, Section:cs.Classroom.Section},
+      professor: {
+        name: cs.Classroom.ClassroomProfessors[0]?.Professor?.User?.Name || 'No Professor Assigned',
+        surname: cs.Classroom.ClassroomProfessors[0]?.Professor?.User?.LastName1 || 'No Professor Assigned',
+        email: cs.Classroom.ClassroomProfessors[0]?.Professor?.User?.Email || 'No Professor Assigned'
+      }
+    }))
   }
 
   async getClassroomsByProfessor(professorId: string): Promise<Classroom[]> {

@@ -1,4 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm"
+import ClassroomProfessor from "./ClassroomProfessor"
+import ClassroomStudent from "./ClassroomStudent"
 
 @Entity()
 class Classroom {
@@ -13,5 +15,10 @@ class Classroom {
 
   @Column()
   Code: string
+  @OneToMany(() => ClassroomProfessor, classroomProfessor => classroomProfessor.Classroom)
+  ClassroomProfessors: ClassroomProfessor[]
+
+  @OneToMany(() => ClassroomStudent, classroomStudent => classroomStudent.Classroom)
+  ClassroomStudents: ClassroomStudent[]
 }
 export default Classroom

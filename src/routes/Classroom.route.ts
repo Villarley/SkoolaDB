@@ -43,7 +43,7 @@ router.post("/:classroomId/join/:studentId", validateJWT, async (req: JoinClassr
 // Route to get classrooms by student
 router.get("/student/:studentId", validateJWT, async (req: GetClassroomsByStudentRequest, res: Response) => {
   const { studentId } = req.params
-
+  console.log("Hola si es este")
   try {
     const classrooms = await classroomService.getClassroomsByStudent(studentId)
     res.status(200).json(classrooms)
