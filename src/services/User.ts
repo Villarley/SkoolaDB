@@ -76,7 +76,6 @@ class UserService {
     const student = await this.studentService.getStudentByPersonId(user.Id)
     const professor = await this.professorService.getProfessorByPersonId(user.Id)
     const roleId = student ? student.Id : professor ? professor.Id : "null"
-    console.log(roleId)
     return { user, token, roleId }
   }
 

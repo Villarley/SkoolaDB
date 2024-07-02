@@ -1,8 +1,8 @@
 import { Router, Response } from "express"
-import { validateMiddleware } from "@/middlewares/validate"
 import { CreateClassroomDto } from "@/dto/Classroom"
 import ClassroomService from "@/services/Classroom/Classroom"
-import { validateJWT } from "@/middlewares/validateJwt"
+import { validateMiddleware } from "@/middlewares/validate"
+import { validateJWT } from "@/middlewares/"
 import { 
   CreateClassroomRequest, 
   JoinClassroomRequest, 
