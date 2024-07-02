@@ -17,6 +17,15 @@ class AssignmentService {
     return assignment
   }
 
+
+  async getAssignmentsByStudentId(Id:string):Promise<Assignment>{
+    const assignment = await this.assignmentRepository.findOne({where: { Id }})
+    if (!assignment) {
+        throw new Error("Assignment not found")
+      }
+    return assignment
+  }
+
   async createAssignment(assignment:CreateAssignmentDto):Promise<Assignment>{
     const newAssignment = this.assignmentRepository.create(assignment)
     const savedAssignment = await this.assignmentRepository.save(newAssignment)
