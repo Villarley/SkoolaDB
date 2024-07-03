@@ -22,7 +22,7 @@ router.get("/:Id", async (req:IdRequest, res:Response) => {
     }
 })
 
-router.post("/assignments", validateJWT, validateMiddleware(CreateAssignmentDto), async (req: Request, res: Response) => {
+router.post("/", validateJWT, validateMiddleware(CreateAssignmentDto), async (req: Request, res: Response) => {
   try {
     const assignmentDto: CreateAssignmentDto = req.body;
 

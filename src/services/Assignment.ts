@@ -22,7 +22,7 @@ class AssignmentService {
     return assignment
   }
 
-  async createAssignment(assignmentDto: CreateAssignmentDto): Promise<Assignment> {
+  async  createAssignment(assignmentDto: CreateAssignmentDto): Promise<Assignment> {
     const { Instructions, DateToComplete } = assignmentDto
 
     const parsedDate = new Date(DateToComplete)
@@ -50,7 +50,7 @@ class AssignmentService {
   async addStudentsToAssignment(classroomId: string, assignment: Assignment): Promise<AssignmentStudent[]> {
     const classroomStudents = await this.classroomStudentRepository.find({
       where: { Classroom: { Id: classroomId } },
-      relations: ["student"]
+      relations: ["Student"]
     })
 
     if (classroomStudents.length === 0) {
