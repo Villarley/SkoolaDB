@@ -1,35 +1,53 @@
 import { Router } from "express"
 import { Request, Response } from "express"
-import AssignmentService from "@/services/Assignment"
+import { IdRequest } from "@/interface/requests/constant"
 import { validateMiddleware } from "@/middlewares/validate"
 import { validateJWT } from "@/middlewares"
 import { CreateAssignmentDto } from "@/dto/Assignment"
-
+import AssignmentService from "@/services/Assignment"
+// import ClassroomService from "@/services/Classroom/Classroom"
 
 //Everything uses camelCase, only the imported services or Dtos are in PascalCase
 const router = Router()
 const assignmentService = new AssignmentService()
+// const classroomService = new ClassroomService()
 
-router.get("/:Id", (req:Request, res:Response) => {
+router.get("/:Id", async (req:IdRequest, res:Response) => {
     try {
         const { Id } = req.params
-        // const user = userService.getUserById(Id)
-        // if(!user)throw new Error("User not found")
-        res.status(200).json({ msg: Id })
+        const assignment = await assignmentService.getAssignmentById(Id)  
+        res.status(200).json(assignment)
     } catch (error) {
         res.status(400).json({ error: error })
     }
 })
 
-router.post("/",validateJWT, validateMiddleware(CreateAssignmentDto), async(req:Request, res:Response) => {
-    try {
-        const assignment = req.body
-        const newAssignment = await assignmentService.createAssignment(assignment)
-        console.log(newAssignment)
-        res.status(201).json(newAssignment)
-    } catch (error) {
-        res.status(400).json({ error: error })
-    }
-})
+router.post("/assignments", validateJWT, validateMiddleware(CreateAssignmentDto), async (req: Request, res: Response) => {
+  try {
+    const assignmentDto: CreateAssignmentDto = req.body;
+
+    // Create the assignment using the service
+    const newAssignment = await assignmentService.createAssignment(assignmentDto);
+
+    // Add students to the assignment using the service
+    await assignmentService.addStudentsToAssignment(assignmentDto.ClassroomId, newAssignment);
+
+    res.status(201).json(newAssignment);
+  } catch (error:any) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+router.get("/assignments/classroom-student/:classroomStudentId", validateJWT, async (req: IdRequest, res: Response) => {
+  try {
+    const { Id:classroomStudentId } = req.params;
+
+    const assignments = await assignmentService.getAssignmentsByClassroomStudentId(classroomStudentId);
+
+    res.status(200).json(assignments);
+  } catch (error:any) {
+    res.status(400).json({ error: error.message });
+  }
+});
 
 export default router

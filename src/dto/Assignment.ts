@@ -11,5 +11,5 @@ export class CreateAssignmentDto {
 
   @IsNotEmpty()
   @Length(1, 20)
-  DateToComplete: Date
+  DateToComplete: string
 }
