@@ -4,8 +4,7 @@ import express, { Application } from "express"
 import cors from "cors"
 import dotenv from "dotenv"
 import AppDataSource from "./ormconfig"
-import AuthRoute from "./routes/Auth.route"
-import ClassroomRoute from "./routes/Classroom.route"
+import { AuthRoutes, ClassroomRoutes, AssignmentRoutes } from "./routes"
 
 
 dotenv.config()
@@ -15,9 +14,11 @@ dotenv.config()
 class Server {
     private app: Application
     private port: string
+    private Path:string = "/Skoola"
     private apiPaths = { 
-        auth: "/Skoola/Auth",
-        classroom: "/Skoola/Classroom"
+        auth: `${this.Path}/Auth`,
+        classroom: `${this.Path}/Classroom`,
+        assignment: `${this.Path}/Assignment`
     }
 
     constructor() {
@@ -34,8 +35,9 @@ class Server {
     }
 
     private routes() {
-        this.app.use( this.apiPaths.auth , AuthRoute )
-        this.app.use( this.apiPaths.classroom, ClassroomRoute )
+        this.app.use( this.apiPaths.auth , AuthRoutes )
+        this.app.use( this.apiPaths.classroom, ClassroomRoutes )
+        this.app.use( this.apiPaths.assignment, AssignmentRoutes )
         // this.app.use("/Skoola/Person", (req, res) => res.send("Person route"))
         // this.app.use("/Skoola/Student", (req, res) => res.send("Student route"))
     }

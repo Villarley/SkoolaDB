@@ -1,6 +1,7 @@
-import { Entity, BeforeInsert, PrimaryGeneratedColumn, OneToOne, JoinColumn } from "typeorm"
+import { Entity, BeforeInsert, PrimaryGeneratedColumn, OneToOne, JoinColumn, OneToMany } from "typeorm"
 import { v4 as uuidv4 } from "uuid"
 import User from "./User"
+import { AssignmentStudent } from "../Assignment"
 
 
 @Entity()
@@ -18,6 +19,7 @@ class Student {
     @OneToOne(() => User)   
     @JoinColumn()
     User: User
-
+    @OneToMany(() => AssignmentStudent, assignmentStudent => assignmentStudent.Student)
+    Assignments: AssignmentStudent[]
 }
 export default Student
