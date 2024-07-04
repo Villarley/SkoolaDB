@@ -82,7 +82,19 @@ class AssignmentService {
           Classroom: { Id: classroomId }
         }
       },
-      relations: ["Student", "Assignment"]
+      relations: ["Student", "Assignment", "Student.User"],
+      select:{
+        Student:{
+          Id: true,
+          User:{
+            Id:true,
+            Name:true,
+            LastName1:true,
+            LastName2:true,
+            Email:true,
+          }
+        }
+      }
     })
     return assignmentStudents
   }
