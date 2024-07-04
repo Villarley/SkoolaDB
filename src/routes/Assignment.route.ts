@@ -24,30 +24,40 @@ router.get("/:Id", async (req:IdRequest, res:Response) => {
 
 router.post("/", validateJWT, validateMiddleware(CreateAssignmentDto), async (req: Request, res: Response) => {
   try {
-    const assignmentDto: CreateAssignmentDto = req.body;
+    const assignmentDto: CreateAssignmentDto = req.body
 
     // Create the assignment using the service
-    const newAssignment = await assignmentService.createAssignment(assignmentDto);
+    const newAssignment = await assignmentService.createAssignment(assignmentDto)
 
     // Add students to the assignment using the service
-    await assignmentService.addStudentsToAssignment(assignmentDto.ClassroomId, newAssignment);
+    await assignmentService.addStudentsToAssignment(assignmentDto.ClassroomId, newAssignment)
 
-    res.status(201).json(newAssignment);
+    res.status(201).json(newAssignment)
   } catch (error:any) {
-    res.status(400).json({ error: error.message });
+    res.status(400).json({ error: error.message })
   }
-});
+})
 
 router.get("/assignments/classroom-student/:classroomStudentId", validateJWT, async (req: IdRequest, res: Response) => {
   try {
-    const { Id:classroomStudentId } = req.params;
+    const { Id:classroomStudentId } = req.params
 
-    const assignments = await assignmentService.getAssignmentsByClassroomStudentId(classroomStudentId);
+    const assignments = await assignmentService.getAssignmentsByClassroomStudentId(classroomStudentId)
 
-    res.status(200).json(assignments);
+    res.status(200).json(assignments)
   } catch (error:any) {
-    res.status(400).json({ error: error.message });
+    res.status(400).json({ error: error.message })
   }
-});
+})
+
+router.get("/assignmentStudent/:Id", validateJWT, async ( req:IdRequest, res: Response)=>{
+  try {
+    const { Id: classroomId } = req.params
+    const assignments = await assignmentService.getAssignmentStudentsByClassroom(classroomId)
+    res.status(200).json(assignments)
+  } catch (error:any) {
+    res.status(400).json({error:error})
+  }
+})
 
 export default router

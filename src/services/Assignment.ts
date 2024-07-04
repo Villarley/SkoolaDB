@@ -74,6 +74,13 @@ class AssignmentService {
 
     return assignmentStudents.map(as => as.Assignment)
   }
+  async getAssignmentStudentsByClassroom(classroomId:string):Promise<AssignmentStudent[]>{
+    const assignmentStudents = await this.assignmentStudentRepository.find({
+      where: {Assignment:{Classroom:{Id:classroomId}}},
+      relations:["Student"]
+    })
+    return assignmentStudents
+  }
 }
 
 export default AssignmentService
