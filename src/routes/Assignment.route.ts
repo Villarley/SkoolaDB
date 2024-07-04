@@ -5,11 +5,13 @@ import { validateMiddleware } from "@/middlewares/validate"
 import { validateJWT } from "@/middlewares"
 import { CreateAssignmentDto } from "@/dto/Assignment"
 import AssignmentService from "@/services/Assignment"
+import ClassroomService from "@/services/Classroom/Classroom"
 // import ClassroomService from "@/services/Classroom/Classroom"
 
 //Everything uses camelCase, only the imported services or Dtos are in PascalCase
 const router = Router()
 const assignmentService = new AssignmentService()
+const classroomService = new ClassroomService()
 // const classroomService = new ClassroomService()
 
 router.get("/:Id", async (req:IdRequest, res:Response) => {
@@ -27,7 +29,10 @@ router.post("/", validateJWT, validateMiddleware(CreateAssignmentDto), async (re
     const assignmentDto: CreateAssignmentDto = req.body
 
     // Create the assignment using the service
-    const newAssignment = await assignmentService.createAssignment(assignmentDto)
+    const Classroom = await classroomService.getClassroomById(assignmentDto.ClassroomId)
+    if(!Classroom)throw new Error("Class not found")
+
+    const newAssignment = await assignmentService.createAssignment(assignmentDto, Classroom)
 
     // Add students to the assignment using the service
     await assignmentService.addStudentsToAssignment(assignmentDto.ClassroomId, newAssignment)
@@ -56,6 +61,7 @@ router.get("/assignmentStudent/:Id", validateJWT, async ( req:IdRequest, res: Re
     const assignments = await assignmentService.getAssignmentStudentsByClassroom(classroomId)
     res.status(200).json(assignments)
   } catch (error:any) {
+    console.error(error)
     res.status(400).json({error:error})
   }
 })

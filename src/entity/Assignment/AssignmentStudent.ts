@@ -1,4 +1,4 @@
-import { ManyToOne, Entity, PrimaryGeneratedColumn } from "typeorm"
+import { ManyToOne, Entity, PrimaryGeneratedColumn, JoinColumn } from "typeorm"
 import { Assignment } from "@/entity/Assignment"
 import { Student } from "../User"
 
@@ -7,10 +7,12 @@ import { Student } from "../User"
 class AssignmentStudent {
     @PrimaryGeneratedColumn("uuid")
     Id: string
-    @ManyToOne(() => Assignment, {cascade:true})
+    @ManyToOne(() => Assignment, assignment => assignment.AssignmentStudents)
+    @JoinColumn()
     Assignment: Assignment
-    
-    @ManyToOne(() => Student, {cascade:true})
+  
+    @ManyToOne(() => Student, student => student.Assignments)
+    @JoinColumn()
     Student: Student
 }
 export default AssignmentStudent

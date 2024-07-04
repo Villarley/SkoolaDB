@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, ManyToMany } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from "typeorm"
 import { Classroom } from "@/entity/Classroom/"
 import AssignmentStudent from "./AssignmentStudent"
 
@@ -13,11 +13,11 @@ class Assignment {
   @Column()
   DateToComplete: Date
   
-  @ManyToOne(() => Classroom, { cascade : true })
-  @JoinColumn()
+  @ManyToOne(() => Classroom, classroom => classroom.Assignments)
   Classroom: Classroom
-  @ManyToMany(() => AssignmentStudent, assignmentStudent => assignmentStudent.Assignment)
-  students: AssignmentStudent[];
+
+  @OneToMany(() => AssignmentStudent, assignmentStudent => assignmentStudent.Assignment)
+  AssignmentStudents: AssignmentStudent[]
 }
 
 export default Assignment
