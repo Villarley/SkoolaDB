@@ -4,7 +4,6 @@ import { validate, ValidationError } from "class-validator"
 
 export function validateMiddleware(type: any): (req: Request, res: Response, next: NextFunction) => Promise<void> {
   return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    console.log(req.body)
     const dto = plainToInstance(type, req.body)
     const errors: ValidationError[] = await validate(dto)
 
