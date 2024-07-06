@@ -1,3 +1,5 @@
-export { default as ClassroomRoutes } from "./Classroom.route"
-export { default as AuthRoutes } from "./Auth.route"
-export { default as AssignmentRoutes } from "./Assignment.route"
+export { default as ClassroomRoutes } from "./Classroom.routes"
+export { default as AuthRoutes } from "./Auth.routes"
+export { default as AssignmentRoutes } from "./Assignment.routes"
+export { default as LinkRoutes } from "./Link.routes"
+export { default as HandableRoutes } from "./Handable.routes"

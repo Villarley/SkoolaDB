@@ -1,25 +1,43 @@
 import { Repository } from "typeorm"
-import { Handable } from "@/entity/Handable"
+import { Handable } from "@/entity/Handable/"
+import { AssignmentStudent } from "@/entity/Assignment"
 import DataSource from "@/ormconfig"
+import { CreateHandableDto } from "@/dto/Handable"
 
 class HandableService {
-    private handableRepository: Repository<Handable>
-    
-    constructor(){
-        this.handableRepository = DataSource.getRepository(Handable)
-    }
+  private handableRepository: Repository<Handable>
+  private assignmentStudentRepository: Repository<AssignmentStudent>
 
-    async getHandableById(Id:string):Promise<Handable>{
-        const handable = await this.handableRepository.findOne({where:{Id}})
-        if(!handable){
-            throw new Error("Handable not found")
-        }
-        return handable
+  constructor() {
+    this.handableRepository = DataSource.getRepository(Handable)
+    this.assignmentStudentRepository = DataSource.getRepository(AssignmentStudent)
+  }
+
+  async getHandableById(Id: string): Promise<Handable> {
+    const handable = await this.handableRepository.findOne({ where: { Id } })
+    if (!handable) {
+      throw new Error("Handable not found")
     }
-    async createHandable(handable: Handable):Promise<Handable>{
-        const createHandable = this.handableRepository.create(handable)
-        const createdHandable = await this.handableRepository.save(createHandable)
-        return createdHandable
+    return handable
+  }
+
+  async createHandable(createHandableDto: CreateHandableDto, assignmentStudent: AssignmentStudent): Promise<Handable> {
+
+    const handable = this.handableRepository.create({
+      AssignmentStudent: assignmentStudent
+    })
+
+    const createdHandable = await this.handableRepository.save(handable)
+    return createdHandable
+  }
+
+  async getAssignmentStudentById(id: string): Promise<AssignmentStudent> {
+    const assignmentStudent = await this.assignmentStudentRepository.findOne({ where: { Id: id } })
+    if (!assignmentStudent) {
+      throw new Error("AssignmentStudent not found")
     }
+    return assignmentStudent
+  }
 }
+
 export default HandableService

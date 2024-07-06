@@ -3,8 +3,9 @@ import "module-alias/register"
 import express, { Application } from "express"
 import cors from "cors"
 import dotenv from "dotenv"
+import bodyParser from "body-parser"
 import AppDataSource from "./ormconfig"
-import { AuthRoutes, ClassroomRoutes, AssignmentRoutes } from "./routes"
+import { AuthRoutes, ClassroomRoutes, AssignmentRoutes, LinkRoutes, HandableRoutes } from "./routes"
 
 
 dotenv.config()
@@ -18,7 +19,9 @@ class Server {
     private apiPaths = { 
         auth: `${this.Path}/Auth`,
         classroom: `${this.Path}/Classroom`,
-        assignment: `${this.Path}/Assignment`
+        assignment: `${this.Path}/Assignment`,
+        link: `${this.Path}/Link`,
+        handable: `${this.Path}/Handable`
     }
 
     constructor() {
@@ -32,10 +35,13 @@ class Server {
     private middlewares() {
         this.app.use(cors())
         this.app.use(express.json())
+        this.app.use(bodyParser.json({ limit: "200mb" }))
     }
 
     private routes() {
+        this.app.use( this.apiPaths.link, LinkRoutes )
         this.app.use( this.apiPaths.auth , AuthRoutes )
+        this.app.use( this.apiPaths.handable, HandableRoutes )
         this.app.use( this.apiPaths.classroom, ClassroomRoutes )
         this.app.use( this.apiPaths.assignment, AssignmentRoutes )
         // this.app.use("/Skoola/Person", (req, res) => res.send("Person route"))

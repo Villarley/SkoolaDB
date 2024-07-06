@@ -11,7 +11,7 @@ class Link {
     @Column({
         type: "enum",
         enum: LinkType,
-        default: LinkType.AWSLINK
+        default: LinkType.FILE
     })
     LinkType: LinkType
     @ManyToOne(() => Handable, { cascade: true })

@@ -6,16 +6,22 @@ import { Link, EvaluationAspect } from "@/entity/Handable"
 class Handable {
     @PrimaryGeneratedColumn("uuid")
     Id: string
-    @Column()
-    DateHanded: Date
-    @Column()
-    Grade: number
+
+    @Column({ nullable: true })
+    DateHanded?: Date
+
+    @Column({ type: "float", nullable: true })
+    Grade?: number
+
     @ManyToOne(() => AssignmentStudent, { cascade: true })
     @JoinColumn()
     AssignmentStudent: AssignmentStudent
+
     @OneToMany(() => Link, link => link.Handable)
     Links: Link[]
+
     @OneToMany(() => EvaluationAspect, evaluation => evaluation.Handable)
     EvaluationAspects: EvaluationAspect[]
 }
+
 export default Handable

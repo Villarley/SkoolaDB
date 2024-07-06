@@ -1,5 +1,5 @@
 enum LinkType {
-    AWSLINK = "AWSLINK",
+    FILE = "FILE",
     EXTERNALLINK = "EXTERNALLINK",
 }
 export default LinkType
