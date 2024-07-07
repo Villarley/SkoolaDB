@@ -70,6 +70,7 @@ router.get("/assignmentStudent2/:Id", validateJWT, async ( req:IdRequest, res: R
   try {
     const { Id } = req.params
     const assignments = await assignmentService.getAssignmentStudentById2(Id)
+    
     res.status(200).json(assignments)
   } catch (error:any) {
     console.error(error)

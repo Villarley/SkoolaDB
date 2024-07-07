@@ -8,6 +8,8 @@ class Link {
     Id: string
     @Column()
     Link: string
+    @Column({nullable:true})
+    FileId:string
     @Column({
         type: "enum",
         enum: LinkType,

@@ -4,6 +4,8 @@ import { Assignment, AssignmentStudent } from "@/entity/Assignment"
 import { Student } from "@/entity/User"
 import { ClassroomStudent } from "@/entity/Classroom"
 import { CreateAssignmentDto } from "@/dto/Assignment"
+import axios from "axios"
+import b2 from "@/config/b2config"
 
 class AssignmentService {
   private assignmentRepository: Repository<Assignment>
@@ -103,10 +105,40 @@ class AssignmentService {
     })
     return assignmentStudents
   }
-  async getAssignmentStudentById2(Id:string):Promise<AssignmentStudent>{
-    const assignmentStudent = await this.assignmentStudentRepository.findOne({ where:{Id}, relations:["Handables", "Handables.Links"] })
-    if(!assignmentStudent)throw new Error("AssignmentStudent not found")
+  async getAssignmentStudentById2(Id: string): Promise<AssignmentStudent> {
+    const assignmentStudent = await this.assignmentStudentRepository.findOne({ where: { Id }, relations: ["Handables", "Handables.Links"] })
+    if (!assignmentStudent) throw new Error("AssignmentStudent not found")
+
+    for (const handable of assignmentStudent.Handables) {
+      for (const link of handable.Links) {
+        if (link.LinkType === 'FILE') {
+          try {
+            const fileResponse = await this.fetchFileById(link.FileId)
+            link.Link = fileResponse.data.toString('base64') // Store file data as base64 string
+          } catch (error) {
+            link.Link = "" // Handle error by setting FileData to null
+            console.error(`Error fetching file ${link.Link}:`, error)
+          }
+        }
+      }
+    }
+
     return assignmentStudent
+  }
+
+  private async fetchFileById(fileId: string): Promise<any> {
+    await b2.authorize()
+
+    const response = await b2.downloadFileById({
+      fileId,
+      responseType: 'arraybuffer'
+    })
+
+    if (response.status !== 200) {
+      throw new Error(`Failed to fetch file, status code: ${response.status}`)
+    }
+
+    return response
   }
 }
 
