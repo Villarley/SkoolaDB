@@ -103,6 +103,11 @@ class AssignmentService {
     })
     return assignmentStudents
   }
+  async getAssignmentStudentById2(Id:string):Promise<AssignmentStudent>{
+    const assignmentStudent = await this.assignmentStudentRepository.findOne({ where:{Id}, relations:["Handables", "Handables.Links"] })
+    if(!assignmentStudent)throw new Error("AssignmentStudent not found")
+    return assignmentStudent
+  }
 }
 
 export default AssignmentService

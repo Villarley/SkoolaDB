@@ -66,4 +66,15 @@ router.get("/assignmentStudent/:Id", validateJWT, async ( req:IdRequest, res: Re
   }
 })
 
+router.get("/assignmentStudent2/:Id", validateJWT, async ( req:IdRequest, res: Response)=>{
+  try {
+    const { Id } = req.params
+    const assignments = await assignmentService.getAssignmentStudentById2(Id)
+    res.status(200).json(assignments)
+  } catch (error:any) {
+    console.error(error)
+    res.status(400).json({error:error})
+  }
+})
+
 export default router
