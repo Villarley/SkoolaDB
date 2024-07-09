@@ -7,6 +7,9 @@ class Assignment {
   @PrimaryGeneratedColumn("uuid")
   Id: string
 
+  @Column({nullable:true})
+  Title: string
+
   @Column()
   Instructions: string
 

@@ -6,12 +6,14 @@ import { validateJWT } from "@/middlewares"
 import { CreateAssignmentDto } from "@/dto/Assignment"
 import AssignmentService from "@/services/Assignment"
 import ClassroomService from "@/services/Classroom/Classroom"
+import HandableService from "@/services/Handable"
 // import ClassroomService from "@/services/Classroom/Classroom"
 
 //Everything uses camelCase, only the imported services or Dtos are in PascalCase
 const router = Router()
 const assignmentService = new AssignmentService()
 const classroomService = new ClassroomService()
+const handableService = new HandableService()
 // const classroomService = new ClassroomService()
 
 router.get("/:Id", async (req:IdRequest, res:Response) => {
@@ -34,8 +36,14 @@ router.post("/", validateJWT, validateMiddleware(CreateAssignmentDto), async (re
 
     const newAssignment = await assignmentService.createAssignment(assignmentDto, Classroom)
 
-    // Add students to the assignment using the service
-    await assignmentService.addStudentsToAssignment(assignmentDto.ClassroomId, newAssignment)
+    // get all the students of the classroom
+    const classroomStudents = await classroomService.getStudentsByClassroom(assignmentDto.ClassroomId)
+
+    // creating all the necesary entities for every es
+    for (const classroomStudent of classroomStudents) {
+      const assignmentStudent = await assignmentService.createAssignmentStudent(newAssignment, classroomStudent.Student)
+      await handableService.createHandable(assignmentStudent)
+    }
 
     res.status(201).json(newAssignment)
   } catch (error:any) {
@@ -59,6 +67,18 @@ router.get("/assignmentStudent/:Id", validateJWT, async ( req:IdRequest, res: Re
   try {
     const { Id: classroomId } = req.params
     const assignments = await assignmentService.getAssignmentStudentsByClassroom(classroomId)
+    res.status(200).json(assignments)
+  } catch (error:any) {
+    console.error(error)
+    res.status(400).json({error:error})
+  }
+})
+
+router.get("/assignmentStudent2/:Id", validateJWT, async ( req:IdRequest, res: Response)=>{
+  try {
+    const { Id } = req.params
+    const assignments = await assignmentService.getAssignmentStudentById2(Id)
+    
     res.status(200).json(assignments)
   } catch (error:any) {
     console.error(error)

@@ -4,6 +4,7 @@ import { Assignment, AssignmentStudent } from "@/entity/Assignment"
 import { Student } from "@/entity/User"
 import { ClassroomStudent } from "@/entity/Classroom"
 import { CreateAssignmentDto } from "@/dto/Assignment"
+import b2 from "@/config/b2Config"
 
 class AssignmentService {
   private assignmentRepository: Repository<Assignment>
@@ -17,13 +18,18 @@ class AssignmentService {
   }
 
   async getAssignmentById(Id:string):Promise<Assignment>{
-    const assignment = await this.assignmentRepository.findOne({where:{Id}})
+    const assignment = await this.assignmentRepository.findOne({ where:{Id} })
     if(!assignment)throw new Error("Assignment not founf")
     return assignment
   }
+  async getAssignmentStudentById(Id:string):Promise<AssignmentStudent>{
+    const assignmentStudent = await this.assignmentStudentRepository.findOne({ where:{Id}, relations:["Assignment", "Handables", "Handables"] })
+    if(!assignmentStudent)throw new Error("AssignmentStudent not found")
+    return assignmentStudent
+  }
 
   async  createAssignment(assignmentDto: CreateAssignmentDto, Classroom:{}): Promise<Assignment> {
-    const { Instructions, DateToComplete } = assignmentDto
+    const { Instructions, DateToComplete, Title } = assignmentDto
 
     const parsedDate = new Date(DateToComplete)
     if (isNaN(parsedDate.getTime())) {
@@ -33,6 +39,7 @@ class AssignmentService {
     const assignment = this.assignmentRepository.create({
       Instructions,
       DateToComplete: parsedDate,
+      Title,
       Classroom,
     })
 
@@ -97,6 +104,41 @@ class AssignmentService {
       }
     })
     return assignmentStudents
+  }
+  async getAssignmentStudentById2(Id: string): Promise<AssignmentStudent> {
+    const assignmentStudent = await this.assignmentStudentRepository.findOne({ where: { Id }, relations: ["Handables", "Handables.Links"] })
+    if (!assignmentStudent) throw new Error("AssignmentStudent not found")
+
+    for (const handable of assignmentStudent.Handables) {
+      for (const link of handable.Links) {
+        if (link.LinkType === 'FILE') {
+          try {
+            const fileResponse = await this.fetchFileById(link.FileId)
+            link.Link = fileResponse.data.toString('base64') // Store file data as base64 string
+          } catch (error) {
+            link.Link = "" // Handle error by setting FileData to null
+            console.error(`Error fetching file ${link.Link}:`, error)
+          }
+        }
+      }
+    }
+
+    return assignmentStudent
+  }
+
+  private async fetchFileById(fileId: string): Promise<any> {
+    await b2.authorize()
+
+    const response = await b2.downloadFileById({
+      fileId,
+      responseType: 'arraybuffer'
+    })
+
+    if (response.status !== 200) {
+      throw new Error(`Failed to fetch file, status code: ${response.status}`)
+    }
+
+    return response
   }
 }
 
