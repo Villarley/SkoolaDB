@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm"
 import { Assignment } from "@/entity/Assignment/"
 import ClassroomProfessor from "./ClassroomProfessor"
 import ClassroomStudent from "./ClassroomStudent"
+import { Project } from "@/entity/Project"
 
 @Entity()
 class Classroom {
@@ -25,5 +26,8 @@ class Classroom {
 
   @OneToMany(() => ClassroomStudent, classroomStudent => classroomStudent.Classroom)
   ClassroomStudents: ClassroomStudent[]
+
+  @OneToMany(()=>Project, project => project.Classroom)
+  Projects: Project[]
 }
 export default Classroom
