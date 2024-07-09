@@ -1,6 +1,6 @@
 import { Router, Request, Response } from "express"
 import multer from "multer"
-import b2 from "@/config/b2config"
+import b2 from "@/config/b2Config"
 import LinkService from "@/services/Link"
 import HandableService from "@/services/Handable"
 import { validateJWT } from "@/middlewares/"

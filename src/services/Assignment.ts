@@ -4,8 +4,7 @@ import { Assignment, AssignmentStudent } from "@/entity/Assignment"
 import { Student } from "@/entity/User"
 import { ClassroomStudent } from "@/entity/Classroom"
 import { CreateAssignmentDto } from "@/dto/Assignment"
-import axios from "axios"
-import b2 from "@/config/b2config"
+import b2 from "@/config/b2Config"
 
 class AssignmentService {
   private assignmentRepository: Repository<Assignment>
