@@ -6,6 +6,7 @@ import { validateJWT } from "@/middlewares"
 import { CreateAssignmentDto } from "@/dto/Assignment"
 import AssignmentService from "@/services/Assignment"
 import ClassroomService from "@/services/Classroom/Classroom"
+import { AssignmentStudent } from "@/entity/Assignment"
 // import ClassroomService from "@/services/Classroom/Classroom"
 
 //Everything uses camelCase, only the imported services or Dtos are in PascalCase
@@ -34,8 +35,14 @@ router.post("/", validateJWT, validateMiddleware(CreateAssignmentDto), async (re
 
     const newAssignment = await assignmentService.createAssignment(assignmentDto, Classroom)
 
-    // Add students to the assignment using the service
-    await assignmentService.addStudentsToAssignment(assignmentDto.ClassroomId, newAssignment)
+    // get all the students of the classroom
+    const classroomStudents = await classroomService.getStudentsByClassroom(assignmentDto.ClassroomId)
+
+    const assignmentStudents: AssignmentStudent[] = []
+    for (const classroomStudent of classroomStudents) {
+      const assignmentStudent = await assignmentService.createAssignmentStudent(newAssignment, classroomStudent.Student)
+      assignmentStudents.push(assignmentStudent)
+    }
 
     res.status(201).json(newAssignment)
   } catch (error:any) {

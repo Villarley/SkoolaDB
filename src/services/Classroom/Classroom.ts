@@ -69,6 +69,15 @@ class ClassroomService {
     return classroom
   }
 
+  async getStudentsByClassroom(classroomId:string):Promise<ClassroomStudent[]>{
+    const classroomStudents = await this.classroomStudentRepository.find({
+      where: { Classroom: { Id: classroomId } },
+      relations: ["Student"]
+    })
+    if (classroomStudents.length === 0)throw new Error("No students found in the specified classroom")
+    return classroomStudents
+  }
+
   private buildClassroom(createClassroomDto: CreateClassroomDto, Code: string): Classroom {
     const { Name, Section } = createClassroomDto
     return this.classroomRepository.create({
