@@ -1,5 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from "typeorm"
-import { Classroom } from "../Classroom"
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany } from "typeorm"
+import { Classroom } from "@/entity/Classroom"
+import Team from "./Team"
 
 @Entity()
 class Project{
@@ -15,6 +16,8 @@ class Project{
     @ManyToOne(() => Classroom, classroom => classroom.Projects)
     Classroom: Classroom
 
+    @OneToMany(() => Team, team => team.Project)
+    Teams: Team[]
 
 }
 export default Project
