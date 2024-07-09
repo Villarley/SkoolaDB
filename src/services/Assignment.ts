@@ -29,7 +29,7 @@ class AssignmentService {
   }
 
   async  createAssignment(assignmentDto: CreateAssignmentDto, Classroom:{}): Promise<Assignment> {
-    const { Instructions, DateToComplete } = assignmentDto
+    const { Instructions, DateToComplete, Title } = assignmentDto
 
     const parsedDate = new Date(DateToComplete)
     if (isNaN(parsedDate.getTime())) {
@@ -39,6 +39,7 @@ class AssignmentService {
     const assignment = this.assignmentRepository.create({
       Instructions,
       DateToComplete: parsedDate,
+      Title,
       Classroom,
     })
 

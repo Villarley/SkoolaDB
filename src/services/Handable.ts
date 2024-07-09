@@ -2,7 +2,6 @@ import { Repository } from "typeorm"
 import { Handable } from "@/entity/Handable/"
 import { AssignmentStudent } from "@/entity/Assignment"
 import DataSource from "@/ormconfig"
-import { CreateHandableDto } from "@/dto/Handable"
 
 class HandableService {
   private handableRepository: Repository<Handable>
@@ -21,7 +20,7 @@ class HandableService {
     return handable
   }
 
-  async createHandable(createHandableDto: CreateHandableDto, assignmentStudent: AssignmentStudent): Promise<Handable> {
+  async createHandable(assignmentStudent: AssignmentStudent): Promise<Handable> {
 
     const handable = this.handableRepository.create({
       AssignmentStudent: assignmentStudent

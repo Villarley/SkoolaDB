@@ -6,13 +6,14 @@ import { validateJWT } from "@/middlewares"
 import { CreateAssignmentDto } from "@/dto/Assignment"
 import AssignmentService from "@/services/Assignment"
 import ClassroomService from "@/services/Classroom/Classroom"
-import { AssignmentStudent } from "@/entity/Assignment"
+import HandableService from "@/services/Handable"
 // import ClassroomService from "@/services/Classroom/Classroom"
 
 //Everything uses camelCase, only the imported services or Dtos are in PascalCase
 const router = Router()
 const assignmentService = new AssignmentService()
 const classroomService = new ClassroomService()
+const handableService = new HandableService()
 // const classroomService = new ClassroomService()
 
 router.get("/:Id", async (req:IdRequest, res:Response) => {
@@ -38,10 +39,10 @@ router.post("/", validateJWT, validateMiddleware(CreateAssignmentDto), async (re
     // get all the students of the classroom
     const classroomStudents = await classroomService.getStudentsByClassroom(assignmentDto.ClassroomId)
 
-    const assignmentStudents: AssignmentStudent[] = []
+    // creating all the necesary entities for every es
     for (const classroomStudent of classroomStudents) {
       const assignmentStudent = await assignmentService.createAssignmentStudent(newAssignment, classroomStudent.Student)
-      assignmentStudents.push(assignmentStudent)
+      await handableService.createHandable(assignmentStudent)
     }
 
     res.status(201).json(newAssignment)
