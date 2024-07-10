@@ -1,6 +1,8 @@
 import { Repository } from "typeorm"
-import { Team, TeamMember } from "@/entity/Project"
+import { Project, Team, TeamMember } from "@/entity/Project"
 import DataSource from "@/ormconfig"
+import { Role } from "@/Enum"
+import { Student } from "@/entity/User"
 
 class TeamService {
     private teamRepository: Repository<Team>
@@ -23,15 +25,28 @@ class TeamService {
         return team
     }
 
-    async getTeamsByStudentId(studentId:string):Promise<Team[]>{
-        const team = await this.teamMemberRepository.find({where:{Student:{Id:studentId}}})
+    async createTeamMember(team:Team, student:Student, role: Role):Promise<TeamMember>{
+        const newTeamMember = this.teamMemberRepository.create({
+            Team:team,
+            Student:student,
+            Role: role
+        })
+        await this.teamMemberRepository.save(newTeamMember)
+        return newTeamMember
+    }
+
+    async getTeamsByStudentId(studentId:string):Promise<TeamMember[]>{
+        const team = await this.teamMemberRepository.find({where:{Student:{Id:studentId}}, relations:["Team"]})
         if(!team)throw new Error("Team not found")
         return team
     
     }
 
-    async createTeam(team:{}):Promise<Team>{
-        const newTeam = this.teamRepository.create(team)
+    async createTeam(team:{}, project:Project):Promise<Team>{
+        const newTeam = this.teamRepository.create({
+            ...team,
+            Project: project
+        })
         await this.teamRepository.save(newTeam)
         return newTeam
     }
