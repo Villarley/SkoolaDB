@@ -31,8 +31,9 @@ router.get("/projectsByClassroom/:Id", validateJWT, async (req: IdRequest, res: 
 router.get("/projectsByStudentId/:Id", validateJWT, async (req:IdRequest, res: Response) => {
     const { Id: studentId } = req.params
     try {
-        const project = await projectService.getProjectsByStudentId(studentId)
-        res.status(200).json(project)
+        console.log("hola soy yo")
+        const projects = await projectService.getProjectsByStudentId(studentId)
+        res.status(200).json(projects)
     } catch (error: any) {
         res.status(500).json(error)
     }

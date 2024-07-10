@@ -50,5 +50,11 @@ class TeamService {
         await this.teamRepository.save(newTeam)
         return newTeam
     }
+
+    async updateTeam(existingTeam: Team, newTeamData: Partial<Team>): Promise<Team> {
+        // Merge the new data with the existing data
+        const updatedTeam = this.teamRepository.merge(existingTeam, newTeamData);
+        return this.teamRepository.save(updatedTeam);
+      }
 }
 export default TeamService

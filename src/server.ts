@@ -5,7 +5,7 @@ import cors from "cors"
 import dotenv from "dotenv"
 import bodyParser from "body-parser"
 import AppDataSource from "./ormconfig"
-import { AuthRoutes, ClassroomRoutes, AssignmentRoutes, LinkRoutes, HandableRoutes, ProjectRoutes } from "./routes"
+import { AuthRoutes, ClassroomRoutes, AssignmentRoutes, LinkRoutes, HandableRoutes, ProjectRoutes, TeamRoutes } from "./routes"
 
 dotenv.config()
 
@@ -19,7 +19,8 @@ class Server {
         assignment: `${this.Path}/Assignment`,
         link: `${this.Path}/Link`,
         handable: `${this.Path}/Handable`,
-        project: `${this.Path}/Project`
+        project: `${this.Path}/Project`,
+        team: `${this.Path}/Team`
     }
 
     constructor() {
@@ -31,18 +32,19 @@ class Server {
     }
 
     private middlewares() {
-        this.app.use(cors())
-        this.app.use(express.json({ limit: "200mb" }))
-        this.app.use(bodyParser.urlencoded({ limit: "200mb", extended: true }))
+        this.app.use ( cors() )
+        this.app.use ( express.json({ limit: "200mb" }) )
+        this.app.use ( bodyParser.urlencoded({ limit: "200mb", extended: true }) )
     }
 
     private routes() {
-        this.app.use(this.apiPaths.link, LinkRoutes)
-        this.app.use(this.apiPaths.auth, AuthRoutes)
-        this.app.use(this.apiPaths.handable, HandableRoutes)
-        this.app.use(this.apiPaths.classroom, ClassroomRoutes)
-        this.app.use(this.apiPaths.assignment, AssignmentRoutes)
-        this.app.use(this.apiPaths.project, ProjectRoutes)
+        this.app.use ( this.apiPaths.link, LinkRoutes )
+        this.app.use ( this.apiPaths.auth, AuthRoutes )
+        this.app.use ( this.apiPaths.handable, HandableRoutes )
+        this.app.use ( this.apiPaths.classroom, ClassroomRoutes )
+        this.app.use ( this.apiPaths.assignment, AssignmentRoutes )
+        this.app.use ( this.apiPaths.project, ProjectRoutes )
+        this.app.use ( this.apiPaths.team, TeamRoutes )
     }
 
     private async databaseConnection() {
