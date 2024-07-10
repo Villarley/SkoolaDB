@@ -1,6 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn, OneToMany } from "typeorm"
 import { Step, Team } from "@/entity/Project"
-
+import { Assignment } from "@/entity/Assignment"
 @Entity()
 class TeamStep {
   @PrimaryGeneratedColumn("uuid")
@@ -13,6 +13,9 @@ class TeamStep {
   @ManyToOne(() => Step, { cascade: true })
   @JoinColumn()
   Step: Step
+
+  @OneToMany(()=> Assignment, assignment => assignment.TeamStep)
+  Assignments: Assignment[]
 }
 
 export default TeamStep
