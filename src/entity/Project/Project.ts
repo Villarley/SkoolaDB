@@ -14,7 +14,7 @@ class Project{
     @Column({nullable:true})
     Description:string
 
-    @ManyToOne(() => Classroom, classroom => classroom.Projects)
+    @ManyToOne(() => Classroom, Classroom => Classroom.Projects)
     Classroom: Classroom
 
     @OneToMany(() => Team, team => team.Project)

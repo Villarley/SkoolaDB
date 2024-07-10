@@ -5,7 +5,7 @@ import cors from "cors"
 import dotenv from "dotenv"
 import bodyParser from "body-parser"
 import AppDataSource from "./ormconfig"
-import { AuthRoutes, ClassroomRoutes, AssignmentRoutes, LinkRoutes, HandableRoutes } from "./routes"
+import { AuthRoutes, ClassroomRoutes, AssignmentRoutes, LinkRoutes, HandableRoutes, ProjectRoutes } from "./routes"
 
 dotenv.config()
 
@@ -18,7 +18,8 @@ class Server {
         classroom: `${this.Path}/Classroom`,
         assignment: `${this.Path}/Assignment`,
         link: `${this.Path}/Link`,
-        handable: `${this.Path}/Handable`
+        handable: `${this.Path}/Handable`,
+        project: `${this.Path}/Project`
     }
 
     constructor() {
@@ -41,6 +42,7 @@ class Server {
         this.app.use(this.apiPaths.handable, HandableRoutes)
         this.app.use(this.apiPaths.classroom, ClassroomRoutes)
         this.app.use(this.apiPaths.assignment, AssignmentRoutes)
+        this.app.use(this.apiPaths.project, ProjectRoutes)
     }
 
     private async databaseConnection() {
