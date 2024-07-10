@@ -37,6 +37,11 @@ class HandableService {
     }
     return assignmentStudent
   }
+
+  async updateHandable(handable: Handable, newHandable: Partial<Handable>):Promise<Handable>{
+    const updatedHandable = this.handableRepository.merge(handable, newHandable)
+    return await this.handableRepository.save(updatedHandable)
+  }
 }
 
 export default HandableService

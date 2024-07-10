@@ -2,9 +2,10 @@ import { Repository } from "typeorm"
 import DataSource from "@/ormconfig"
 import { Assignment, AssignmentStudent } from "@/entity/Assignment"
 import { Student } from "@/entity/User"
-import { ClassroomStudent } from "@/entity/Classroom"
+import { Classroom, ClassroomStudent } from "@/entity/Classroom"
 import { CreateAssignmentDto } from "@/dto/Assignment"
 import b2 from "@/config/b2Config"
+import { TeamStep } from "@/entity/Project"
 
 class AssignmentService {
   private assignmentRepository: Repository<Assignment>
@@ -26,6 +27,15 @@ class AssignmentService {
     const assignmentStudent = await this.assignmentStudentRepository.findOne({ where:{Id}, relations:["Assignment", "Handables", "Handables"] })
     if(!assignmentStudent)throw new Error("AssignmentStudent not found")
     return assignmentStudent
+  }
+
+  async createAssignmentTeamStep(assignmentdto: CreateAssignmentDto, Classroom : Classroom, TeamStep: TeamStep): Promise<Assignment>{
+    const assignment = this.assignmentRepository.create({
+      ...assignmentdto,
+      Classroom,
+      TeamStep
+    })
+    return await this.assignmentRepository.save(assignment)
   }
 
   async  createAssignment(assignmentDto: CreateAssignmentDto, Classroom:{}): Promise<Assignment> {

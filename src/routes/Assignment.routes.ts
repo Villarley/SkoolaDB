@@ -7,6 +7,7 @@ import { CreateAssignmentDto } from "@/dto/Assignment"
 import AssignmentService from "@/services/Assignment"
 import ClassroomService from "@/services/Classroom/Classroom"
 import HandableService from "@/services/Handable"
+import StepService from "@/services/Step"
 // import ClassroomService from "@/services/Classroom/Classroom"
 
 //Everything uses camelCase, only the imported services or Dtos are in PascalCase
@@ -14,6 +15,7 @@ const router = Router()
 const assignmentService = new AssignmentService()
 const classroomService = new ClassroomService()
 const handableService = new HandableService()
+const stepService = new StepService()
 // const classroomService = new ClassroomService()
 
 router.get("/:Id", async (req:IdRequest, res:Response) => {
@@ -34,7 +36,14 @@ router.post("/", validateJWT, validateMiddleware(CreateAssignmentDto), async (re
     const Classroom = await classroomService.getClassroomById(assignmentDto.ClassroomId)
     if(!Classroom)throw new Error("Class not found")
 
-    const newAssignment = await assignmentService.createAssignment(assignmentDto, Classroom)
+    let newAssignment
+    if(!assignmentDto.TeamStepId){
+      newAssignment = await assignmentService.createAssignment(assignmentDto, Classroom)
+    }else{
+      const TeamStep = await stepService.getTeamStepById(assignmentDto.TeamStepId)
+      newAssignment = await assignmentService.createAssignmentTeamStep(assignmentDto, Classroom, TeamStep)
+    }
+
 
     // get all the students of the classroom
     const classroomStudents = await classroomService.getStudentsByClassroom(assignmentDto.ClassroomId)

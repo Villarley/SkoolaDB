@@ -11,7 +11,7 @@ const projectService = new ProjectService()
 const teamService = new TeamService()
 const router = Router()
 
-router.get("/:Id", validateJWT, async ( req:IdRequest, res:Response)=>{
+router.get("/:Id", validateJWT, async ( req:IdRequest, res:Response) => {
     const { Id: stepId } = req.params
     try {
         const step = await stepService.getStepById(stepId)
@@ -21,7 +21,18 @@ router.get("/:Id", validateJWT, async ( req:IdRequest, res:Response)=>{
     }
 })
 
-router.post("/:Id", validateJWT, async ( req:IdRequest, res: Response)=>{
+//get steps
+router.get("/teamSteps/:Id", validateJWT, async ( req:IdRequest, res:Response ) => {
+    const { Id: teamId } = req.params
+    try {
+        const teamSteps = await stepService.getTeamStepsByTeamId(teamId)
+        res.status(200).json(teamSteps)
+    } catch (error:any) {
+        res.status(500).json(error)
+    }
+})
+
+router.post("/:Id", validateJWT, async ( req:IdRequest, res: Response ) => {
     const { Id: projectId } = req.params
     const step = req.body
     try {
@@ -33,6 +44,7 @@ router.post("/:Id", validateJWT, async ( req:IdRequest, res: Response)=>{
 
         let teamSteps: TeamStep[] = []
         for (const team of teams) {
+            console.log("hola")
             const teamStep = await stepService.createTeamStep(team, newStep)
             teamSteps.push(teamStep)
         }
