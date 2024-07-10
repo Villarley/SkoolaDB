@@ -39,7 +39,12 @@ class TeamService {
         const team = await this.teamMemberRepository.find({where:{Student:{Id:studentId}}, relations:["Team"]})
         if(!team)throw new Error("Team not found")
         return team
-    
+    }
+
+    async getTeamMembersByTeamId(Id:string):Promise<TeamMember[]>{
+        const team = await this.teamMemberRepository.find({where:{Team:{Id}}, relations:["Student", "User"]})
+        if(!team)throw new Error("Team not found")
+        return team
     }
 
     async createTeam(team:{}, project:Project):Promise<Team>{
@@ -56,5 +61,10 @@ class TeamService {
         const updatedTeam = this.teamRepository.merge(existingTeam, newTeamData);
         return this.teamRepository.save(updatedTeam);
       }
+
+    async deleteTeam(team : {}):Promise<Boolean>{
+        await this.teamRepository.delete(team)
+        return true
+    }
 }
 export default TeamService

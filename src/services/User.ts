@@ -91,6 +91,7 @@ class UserService {
 
     return { user, token, roleId }
   }
+
 }
 
 export default UserService

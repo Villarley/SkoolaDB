@@ -28,8 +28,7 @@ class LinkService {
     }
 
     async getProjectsByStudentId(studentId:string):Promise<Project[]>{
-        console.log(studentId)
-        const project = await this.projectRepository.find({where: { Classroom : { ClassroomStudents: { Student: { Id: studentId } } } } })
+        const project = await this.projectRepository.find({where: { Classroom : { ClassroomStudents: { Student: { Id: studentId } } } }, relations:["Classroom", "Teams", "Teams.TeamMembers.Student.User"] })
         if(!project)throw new Error("Project not found")
         return project
     }

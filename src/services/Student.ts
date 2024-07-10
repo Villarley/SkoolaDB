@@ -26,6 +26,11 @@ class StudentService {
     async getStudentByPersonId(personId: string): Promise<Student | null> {
         return await this.studentRepository.findOne({ where: { User: { Id: personId } }, relations: ["User"] })
       }
+      async getStudentById(Id:string):Promise<Student>{
+        const student = await this.studentRepository.findOne({where:{Id}})
+        if(!student)throw new Error("Student not found")
+        return student
+      }
 }
 
 export default StudentService
