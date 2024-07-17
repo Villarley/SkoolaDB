@@ -24,7 +24,7 @@ router.post("/", validateJWT, validateMiddleware(CreateHandableDto), async (req:
 
     const assignmentStudent = await handableService.getAssignmentStudentById(createHandableDto.AssignmentStudentId)
 
-    const handable = await handableService.createHandable(createHandableDto, assignmentStudent)
+    const handable = await handableService.createHandable( assignmentStudent )
     res.status(201).json(handable)
   } catch (error: any) {
     if (Array.isArray(error)) {

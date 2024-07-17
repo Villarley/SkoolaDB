@@ -21,6 +21,7 @@ function validateJWT(req: AuthRequest, res: Response, next: NextFunction) {
   try {
     const payload = verifyToken(token as string) // Aseguramos que token sea una cadena
     req.user = payload
+    return
     next()
   } catch (error) {
     return res.status(401).json({ message: "Invalid or expired token" })
