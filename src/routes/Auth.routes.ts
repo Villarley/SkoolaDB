@@ -43,29 +43,35 @@ router.post("/login", async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body
 
-    if (!email || !password) {
-      res.status(400).json({ message: "Email and password are required" })
+    if (!email) {
+      return res.status(400).json({ message: "Email is required" })
     }
 
     const user = await userService.getUserByEmail(email)
 
     if (!user) {
-      res.status(404).json({ message: "User not found" })
+      return res.status(404).json({ message: "User not found" })
     }
+
     let loggedUser, token, roleId
     if (user.AuthMethod === "PLAIN") {
+      if (!password) {
+        return res.status(400).json({ message: "Password is required" })
+      }
       ({ user: loggedUser, token, roleId } = await userService.login(email, password))
     } else if (user.AuthMethod === "GOOGLE") {
       ({ user: loggedUser, token, roleId } = await userService.loginWithGoogle(email))
     } else {
-      res.status(400).json({ message: "Unsupported authentication method" })
+      return res.status(400).json({ message: "Unsupported authentication method" })
     }
 
-    res.status(200).json({ user: loggedUser, token, roleId  })
+    return res.status(200).json({ user: loggedUser, token, roleId })
   } catch (error: any) {
-    res.status(500).json({ message: error.message })
+    console.error(error)
+    return res.status(500).json({ message: error.message })
   }
 })
+
 
 router.post(
   "/:Role",
