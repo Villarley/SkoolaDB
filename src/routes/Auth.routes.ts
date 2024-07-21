@@ -17,6 +17,7 @@ interface CustomRequest extends Request {
   params:{
     Role?: string
   }
+  body: UserInputDto
 }
 
 router.get("/:Id", validateJWT, (req: Request, res: Response) => {
@@ -53,19 +54,19 @@ router.post("/login", async (req: Request, res: Response) => {
       return res.status(404).json({ message: "User not found" })
     }
 
-    let loggedUser, token, roleId
+    let loggedUser, token, roleId, role
     if (user.AuthMethod === "PLAIN") {
       if (!password) {
         return res.status(400).json({ message: "Password is required" })
       }
-      ({ user: loggedUser, token, roleId } = await userService.login(email, password))
+      ({ user: loggedUser, token, roleId, role } = await userService.login(email, password))
     } else if (user.AuthMethod === "GOOGLE") {
-      ({ user: loggedUser, token, roleId } = await userService.loginWithGoogle(email))
+      ({ user: loggedUser, token, roleId, role } = await userService.loginWithGoogle(email))
     } else {
       return res.status(400).json({ message: "Unsupported authentication method" })
     }
 
-    return res.status(200).json({ user: loggedUser, token, roleId })
+    return res.status(200).json({ user: loggedUser, token, roleId, role })
   } catch (error: any) {
     console.error(error)
     return res.status(500).json({ message: error.message })
@@ -77,9 +78,13 @@ router.post(
   "/:Role",
   validateMiddleware(UserInputDto),
   async(req: CustomRequest, res: Response) => {
+    console.log("hola")
     try {
       const { body } = req
       const { Role } = req.params
+      if(body.AuthMethod === "PLAIN"){
+        body.Password = await userService.hashPassword(body.Password)
+      }
       const user = await userService.createUser(body)
       if(Role === "professor"){
         await professorService.createProfessor(user.Id)
