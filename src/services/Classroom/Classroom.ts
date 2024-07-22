@@ -18,6 +18,7 @@ class ClassroomService {
   }
 
   async createClassroom(createClassroomDto: CreateClassroomDto): Promise<Classroom> {
+    console.log("hola")
     const Code = await generateUniqueClassCode()
     const classroom = this.buildClassroom(createClassroomDto, Code)
     await this.classroomRepository.save(classroom)
