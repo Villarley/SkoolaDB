@@ -38,8 +38,10 @@ class UserService {
     return hashedPassword
   }
 
-  async getUserById(Id: string): Promise<User | null> {
-    return await this.userRepository.findOneBy({ Id })
+  async getUserById(Id: string): Promise<User> {
+    const user = await this.userRepository.findOneBy({ Id })
+    if(!user)throw new Error("No user found")
+    return user
   }
 
   async getUserByName(name: string): Promise<User | null> {

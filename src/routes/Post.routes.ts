@@ -1,10 +1,14 @@
 import { Router, Response } from "express"
 import PostService from "@/services/Post"
+import ClassroomService from "@/services/Classroom/Classroom"
+import UserService from "@/services/User"
 import { validateJWT } from "@/middlewares/"
 import { IdRequest } from "@/interface/requests/constant"
 
 const router = Router()
 const postService = new PostService()
+const userService = new UserService()
+const classroomService = new ClassroomService()
 
 router.get("/:Id", validateJWT, async (req: IdRequest, res: Response) => {
   const { Id } = req.params
@@ -47,9 +51,11 @@ router.get("/postsByTeamStep/:Id", validateJWT, async (req: IdRequest, res: Resp
 })
 
 router.post("/", validateJWT, async (req: IdRequest, res: Response) => {
-  const post = req.body
+  const post = req.body 
   try {
-    const newPost = await postService.createPost(post)
+    const classroom = await classroomService.getClassroomById(post.classroomId)
+    const user = await userService.getUserById(post.PostedBy)
+    const newPost = await postService.createPost(post, user, classroom)
     res.status(201).json(newPost)
   } catch (error: any) {
     res.status(500).json(error.message)

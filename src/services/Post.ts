@@ -1,6 +1,8 @@
 import { Repository } from "typeorm"
 import Post from "@/entity/Post/Post"
+import { User } from "@/entity/User"
 import DataSource from "@/ormconfig"
+import { Classroom } from "@/entity/Classroom"
 
 class PostService {
   private postRepository: Repository<Post>
@@ -15,8 +17,12 @@ class PostService {
     return post
   }
 
-  async createPost(postData: Partial<Post>): Promise<Post> {
-    const newPost = this.postRepository.create(postData)
+  async createPost(postData: Partial<Post>, user:Partial<User>, Classroom:Partial<Classroom>): Promise<Post> {
+    const newPost = this.postRepository.create({
+      ...postData,
+      PostedBy: user,
+      Classroom
+    })
     await this.postRepository.save(newPost)
     return newPost
   }
