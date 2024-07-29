@@ -1,7 +1,8 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany } from "typeorm"
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, OneToOne, JoinColumn } from "typeorm"
 import { Classroom } from "@/entity/Classroom"
 import { Team } from "@/entity/Project"
 import { Step } from "@/entity/Project"
+import Post from "../Post/Post"
 
 @Entity()
 class Project{
@@ -22,6 +23,10 @@ class Project{
 
     @OneToMany(() => Step, step => step.Project)
     Steps: Step[]
+
+    @OneToOne(() => Post, { nullable: true })
+    @JoinColumn()
+    Post: Post
 
 }
 export default Project

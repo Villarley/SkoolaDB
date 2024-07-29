@@ -1,7 +1,8 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, OneToOne, JoinColumn } from "typeorm"
 import { Classroom } from "@/entity/Classroom/"
 import AssignmentStudent from "./AssignmentStudent"
 import { TeamStep } from "../Project"
+import Post from "../Post/Post"
 
 @Entity()
 class Assignment {
@@ -25,6 +26,10 @@ class Assignment {
 
   @OneToMany(() => AssignmentStudent, assignmentStudent => assignmentStudent.Assignment)
   AssignmentStudents: AssignmentStudent[]
+
+  @OneToOne(() => Post, { nullable: true })
+  @JoinColumn()
+  Post: Post
 }
 
 export default Assignment
