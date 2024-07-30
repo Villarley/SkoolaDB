@@ -92,6 +92,17 @@ class AssignmentService {
 
     return assignmentStudents.map(as => as.Assignment)
   }
+
+  async getPendingAssignmentsByStudent(Id:string): Promise<AssignmentStudent[]> {
+    const assignmentStudents = await this.assignmentStudentRepository.find({
+      where: { Student: { Id } },
+      relations: ["Assignment", "Assignment.Classroom"]
+    })
+    if(!assignmentStudents) throw new Error("Not found")
+    return assignmentStudents
+  }
+
+
   async getAssignmentStudentsByClassroom(classroomId: string): Promise<AssignmentStudent[]> {
     const assignmentStudents = await this.assignmentStudentRepository.find({
       where: {

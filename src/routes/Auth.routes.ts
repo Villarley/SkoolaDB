@@ -78,7 +78,6 @@ router.post(
   "/:Role",
   validateMiddleware(UserInputDto),
   async(req: CustomRequest, res: Response) => {
-    console.log("hola")
     try {
       const { body } = req
       const { Role } = req.params

@@ -11,8 +11,9 @@ class PostService {
     this.postRepository = DataSource.getRepository(Post)
   }
 
-  async getPostById(Id: string): Promise<Post> {
-    const post = await this.postRepository.findOne({ where: { Id }, relations: ["PostedBy", "Classroom", "Assignment", "Project", "TeamStep", "Comments"] })
+  async getPostById(Id: string, relations: Boolean): Promise<Post> {
+    const post = relations ? await this.postRepository.findOne({ where: { Id }, relations: ["PostedBy", "Classroom", "Assignment", "Project", "TeamStep", "Comments"] }) 
+    : await this.postRepository.findOne({ where:{ Id } })
     if (!post) throw new Error("Post not found")
     return post
   }

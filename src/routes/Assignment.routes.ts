@@ -8,6 +8,9 @@ import AssignmentService from "@/services/Assignment"
 import ClassroomService from "@/services/Classroom/Classroom"
 import HandableService from "@/services/Handable"
 import StepService from "@/services/Step"
+import PostService from "@/services/Post"
+import UserService from "@/services/User"
+import { PostType } from "@/Enum"
 // import ClassroomService from "@/services/Classroom/Classroom"
 
 //Everything uses camelCase, only the imported services or Dtos are in PascalCase
@@ -16,6 +19,8 @@ const assignmentService = new AssignmentService()
 const classroomService = new ClassroomService()
 const handableService = new HandableService()
 const stepService = new StepService()
+const postService = new PostService()
+const userService = new UserService()
 // const classroomService = new ClassroomService()
 
 router.get("/:Id", async (req:IdRequest, res:Response) => {
@@ -35,6 +40,15 @@ router.post("/", validateJWT, validateMiddleware(CreateAssignmentDto), async (re
     // Create the assignment using the service
     const Classroom = await classroomService.getClassroomById(assignmentDto.ClassroomId)
     if(!Classroom)throw new Error("Class not found")
+    
+    const postData = {
+      Title : assignmentDto.Title,
+      Description : assignmentDto.Instructions,
+      Date : new Date(),
+      PostType : PostType.ASSIGNMENT
+    }
+    const user = await userService.getUserById(assignmentDto.PostedBy)
+    await postService.createPost(postData, user, Classroom)
 
     let newAssignment
     if(!assignmentDto.TeamStepId){
@@ -57,6 +71,17 @@ router.post("/", validateJWT, validateMiddleware(CreateAssignmentDto), async (re
     res.status(201).json(newAssignment)
   } catch (error:any) {
     res.status(400).json({ error: error.message })
+  }
+})
+
+router.get("/Pending/:Id", validateJWT, async ( req:IdRequest, res:Response ) => {
+  try {
+    const { Id } = req.params
+    const assignments = await assignmentService.getPendingAssignmentsByStudent(Id)
+    res.status(200).json(assignments)
+  } catch (error:any) {
+    console.error(error)
+    res.status(400).json({error:error})
   }
 })
 

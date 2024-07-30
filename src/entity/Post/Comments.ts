@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, ManyToOne } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column, JoinColumn, ManyToOne } from "typeorm"
 import { User } from "@/entity/User"
 import Post from "./Post"
 
@@ -10,7 +10,7 @@ class Comment {
   @Column()
   Content: string
 
-  @OneToOne(() => User)   
+  @ManyToOne(() => User)
   @JoinColumn()
   PostedBy: User
 

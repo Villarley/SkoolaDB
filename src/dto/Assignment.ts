@@ -19,4 +19,7 @@ export class CreateAssignmentDto {
   DateToComplete: string
 
   TeamStepId:string
+
+  PostedBy:string
+
 }
