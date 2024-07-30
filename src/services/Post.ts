@@ -28,7 +28,7 @@ class PostService {
   }
 
   async getPostsByClassroomId(classroomId: string): Promise<Post[]> {
-    const posts = await this.postRepository.find({ where: { Classroom: { Id: classroomId } }, relations: ["Classroom"] })
+    const posts = await this.postRepository.find({ where: { Classroom: { Id: classroomId } } })
     if (!posts.length) throw new Error("No posts found for this classroom")
     return posts
   }
