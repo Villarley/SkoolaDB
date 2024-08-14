@@ -29,8 +29,9 @@ class PostService {
   }
 
   async getPostsByClassroomId(classroomId: string): Promise<Post[]> {
-    const posts = await this.postRepository.find({ where: { Classroom: { Id: classroomId } } })
+    const posts = await this.postRepository.find({ where: { Classroom: { Id: classroomId } }, relations:["Assignment", "Project", "Classroom"] })
     if (!posts.length) throw new Error("No posts found for this classroom")
+    console.log(posts)
     return posts
   }
 
@@ -46,7 +47,6 @@ class PostService {
     return posts
   }
 
-  // Métodos adicionales para manejar posts pueden ser añadidos aquí
 }
 
 export default PostService

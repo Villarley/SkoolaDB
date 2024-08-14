@@ -19,7 +19,8 @@ class AssignmentService {
   }
 
   async getAssignmentById(Id:string):Promise<Assignment>{
-    const assignment = await this.assignmentRepository.findOne({ where:{Id} })
+    const assignment = await this.assignmentRepository.findOne({ where:{Id}, relations:[
+      "Classroom.ClassroomProfessors.Professor.User", ""] })
     if(!assignment)throw new Error("Assignment not founf")
     return assignment
   }

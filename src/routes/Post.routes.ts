@@ -53,7 +53,8 @@ router.get("/postsByTeamStep/:Id", validateJWT, async (req: IdRequest, res: Resp
 router.post("/", validateJWT, async (req: IdRequest, res: Response) => {
   const post = req.body 
   try {
-    const classroom = await classroomService.getClassroomById(post.classroomId)
+    console.log(post)
+    const classroom = await classroomService.getClassroomById(post.Classroom)
     const user = await userService.getUserById(post.PostedBy)
     const newPost = await postService.createPost(post, user, classroom)
     res.status(201).json(newPost)

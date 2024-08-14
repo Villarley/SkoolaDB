@@ -27,7 +27,18 @@ router.get("/:Id", async (req:IdRequest, res:Response) => {
     try {
         const { Id } = req.params
         const assignment = await assignmentService.getAssignmentById(Id)  
-        res.status(200).json(assignment)
+        
+        const structuredAssignment = {
+          Id: assignment.Id,
+          Title: assignment.Title,
+          Instructions: assignment.Instructions,
+          DateToComplete: assignment.DateToComplete,
+          Classroom: {
+            ClassroomProfessor: assignment.Classroom.ClassroomProfessors[0]?.Professor.User.Name + " " + assignment.Classroom.ClassroomProfessors[0]?.Professor.User.LastName1 + " " +  assignment.Classroom.ClassroomProfessors[0]?.Professor.User.LastName2 ,
+            ...assignment.Classroom
+          }
+        }
+        res.status(200).json(structuredAssignment)
     } catch (error) {
         res.status(400).json({ error: error })
     }
