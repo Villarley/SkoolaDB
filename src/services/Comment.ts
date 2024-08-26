@@ -13,7 +13,7 @@ class CommentService {
 
   async getCommentsByPostId(PostId: string): Promise<Comment[]> {
     const comments = await this.commentRepository.find({ where: { Post: { Id: PostId } }, relations: ["Post", "PostedBy"] })
-    if (!comments.length) throw new Error("No comments found for this post")
+      
     return comments
   }
 
@@ -23,6 +23,7 @@ class CommentService {
       PostedBy: postedBy,
       Post: post
     })
+    
     await this.commentRepository.save(newComment)
     return newComment
   }

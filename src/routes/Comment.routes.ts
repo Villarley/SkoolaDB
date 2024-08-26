@@ -10,7 +10,7 @@ const commentService = new CommentService()
 const userService = new UserService()
 const postService = new PostService()
 
-router.get("/:PostId", validateJWT, async (req: IdRequest, res: Response) => {
+router.get("/:Id", validateJWT, async (req: IdRequest, res: Response) => {
   const { Id:PostId } = req.params
   try {
     const comments = await commentService.getCommentsByPostId(PostId)

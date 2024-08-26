@@ -18,7 +18,6 @@ class ClassroomService {
   }
 
   async createClassroom(createClassroomDto: CreateClassroomDto): Promise<Classroom> {
-    console.log("hola")
     const Code = await generateUniqueClassCode()
     const classroom = this.buildClassroom(createClassroomDto, Code)
     await this.classroomRepository.save(classroom)
@@ -88,7 +87,7 @@ class ClassroomService {
 
 
   async getClassroomById(classroomId: string): Promise<Classroom> {
-    const classroom = await this.classroomRepository.findOne({ where: { Id: classroomId } })
+    const classroom = await this.classroomRepository.findOne({ where: { Id: classroomId }, relations:["ClassroomStudents", "ClassroomStudents.Student", "ClassroomStudents.Student.User"] })
     if (!classroom) {
       throw new Error("Classroom not found")
     }

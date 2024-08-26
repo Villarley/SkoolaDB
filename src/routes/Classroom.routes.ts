@@ -10,15 +10,9 @@ import {
   GetClassroomsByProfessorRequest, 
   GetClassroomByIdRequest 
 } from "@/interface/requests/Classroom"
-import { IdRequest } from "@/interface/requests/constant"
 
 const router = Router()
 const classroomService = new ClassroomService()
-
-router.get("/:Id", async(req:IdRequest, res:Response)=>{
-  const { Id } = req.params
-  res.json({Id})
-})
 
 // Route to create a classroom and assign a professor
 router.post("/:professorId", validateJWT, validateMiddleware(CreateClassroomDto), async (req: CreateClassroomRequest, res: Response) => {
@@ -29,7 +23,7 @@ router.post("/:professorId", validateJWT, validateMiddleware(CreateClassroomDto)
     await classroomService.assignProfessorToClassroom(professorId, classroom)
     res.status(201).json(classroom)
   } catch (error: any) {
-    console.error(error)
+    // console.error(error)
     res.status(500).json({ message: error.message })
   }
 })
@@ -74,7 +68,7 @@ router.get("/professor/:professorId", validateJWT, async (req: GetClassroomsByPr
 // Route to get a specific classroom by ID
 router.get("/:classroomId", validateJWT, async (req: GetClassroomByIdRequest, res: Response) => {
   const { classroomId } = req.params
-
+  console.log("hola soy yo classroom")
   try {
     const classroom = await classroomService.getClassroomById(classroomId)
     res.status(200).json(classroom)

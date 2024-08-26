@@ -13,7 +13,7 @@ const classroomService = new ClassroomService()
 router.get("/:Id", validateJWT, async (req: IdRequest, res: Response) => {
   const { Id } = req.params
   try {
-    const post = await postService.getPostById(Id)
+    const post = await postService.getPostById(Id, false)
     res.status(200).json(post)
   } catch (error: any) {
     res.status(500).json(error.message)
