@@ -29,11 +29,11 @@ router.post("/:professorId", validateJWT, validateMiddleware(CreateClassroomDto)
 })
 
 // Route for a student to join a classroom
-router.post("/:classroomId/join/:studentId", validateJWT, async (req: JoinClassroomRequest, res: Response) => {
-  const { classroomId, studentId } = req.params
+router.post("/:classroomCode/join/:studentId", validateJWT, async (req: JoinClassroomRequest, res: Response) => {
+  const { classroomCode, studentId } = req.params
 
   try {
-    const classroom = await classroomService.getClassroomById(classroomId)
+    const classroom = await classroomService.getClassroomByCode(classroomCode)
     const classroomStudent = await classroomService.joinClassroom(studentId, classroom)
     res.status(201).json( classroomStudent )
   } catch (error: any) {

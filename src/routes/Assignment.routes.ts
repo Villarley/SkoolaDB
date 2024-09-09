@@ -23,6 +23,14 @@ const postService = new PostService()
 const userService = new UserService()
 // const classroomService = new ClassroomService()
 
+interface studentAssignmentRequest extends Request {
+  params: {
+    studentId: string,
+    assignmentId:string,
+  }
+}
+
+
 router.get("/:Id", async (req:IdRequest, res:Response) => {
     try {
         const { Id } = req.params
@@ -52,22 +60,22 @@ router.post("/", validateJWT, validateMiddleware(CreateAssignmentDto), async (re
     const Classroom = await classroomService.getClassroomById(assignmentDto.ClassroomId)
     if(!Classroom)throw new Error("Class not found")
     
-    const postData = {
-      Title : assignmentDto.Title,
-      Description : assignmentDto.Instructions,
-      Date : new Date(),
-      PostType : PostType.ASSIGNMENT
-    }
-    const user = await userService.getUserById(assignmentDto.PostedBy)
-    await postService.createPost(postData, user, Classroom)
-
-    let newAssignment
-    if(!assignmentDto.TeamStepId){
-      newAssignment = await assignmentService.createAssignment(assignmentDto, Classroom)
-    }else{
-      const TeamStep = await stepService.getTeamStepById(assignmentDto.TeamStepId)
-      newAssignment = await assignmentService.createAssignmentTeamStep(assignmentDto, Classroom, TeamStep)
-    }
+      
+      let newAssignment
+      if(!assignmentDto.TeamStepId){
+        newAssignment = await assignmentService.createAssignment(assignmentDto, Classroom)
+      }else{
+        const TeamStep = await stepService.getTeamStepById(assignmentDto.TeamStepId)
+        newAssignment = await assignmentService.createAssignmentTeamStep(assignmentDto, Classroom, TeamStep)
+      }
+      const postData = {
+        Title : assignmentDto.Title,
+        Description : assignmentDto.Instructions,
+        Date : new Date(),
+        PostType : PostType.ASSIGNMENT
+      }
+      const user = await userService.getUserById(assignmentDto.PostedBy)
+      await postService.createPost(postData, user, Classroom, newAssignment)
 
 
     // get all the students of the classroom
@@ -99,7 +107,7 @@ router.get("/Pending/:Id", validateJWT, async ( req:IdRequest, res:Response ) =>
 router.get("/assignments/classroom-student/:classroomStudentId", validateJWT, async (req: IdRequest, res: Response) => {
   try {
     const { Id:classroomStudentId } = req.params
-
+    console.log("gola")
     const assignments = await assignmentService.getAssignmentsByClassroomStudentId(classroomStudentId)
 
     res.status(200).json(assignments)
@@ -111,11 +119,23 @@ router.get("/assignments/classroom-student/:classroomStudentId", validateJWT, as
 router.get("/assignmentStudent/:Id", validateJWT, async ( req:IdRequest, res: Response)=>{
   try {
     const { Id: classroomId } = req.params
+    console.log("hola");
+    
     const assignments = await assignmentService.getAssignmentStudentsByClassroom(classroomId)
     res.status(200).json(assignments)
   } catch (error:any) {
     console.error(error)
     res.status(400).json({error:error})
+  }
+})
+
+router.get("/assignmentStudents/:Id", validateJWT, async (req: IdRequest, res: Response) => {
+  const { Id:assignmentId } = req.params
+  try {
+    const assignmentStudents = await assignmentService.getAssignmentStudentsByAssignmentId(assignmentId)
+    res.status(200).json(assignmentStudents)
+  } catch (error: any) {
+    res.status(500).json({ error: error.message })
   }
 })
 
@@ -128,6 +148,23 @@ router.get("/assignmentStudent2/:Id", validateJWT, async ( req:IdRequest, res: R
   } catch (error:any) {
     console.error(error)
     res.status(400).json({error:error})
+  }
+})
+
+router.get("/studentAssignment/:assignmentId/:studentId", validateJWT, async (req: studentAssignmentRequest, res: Response) => {
+  const { assignmentId, studentId } = req.params;
+  
+  try {
+    console.log("si")
+    const studentAssignment = await assignmentService.getAssignmentStudentByAssignmentIdAndStudentId(assignmentId, studentId);
+    
+    if (!studentAssignment) {
+      return res.status(404).json({ error: "Student assignment not found" });
+    }
+    
+    return res.status(200).json(studentAssignment);
+  } catch (error: any) {
+    return res.status(500).json({ error: error.message });
   }
 })
 

@@ -94,6 +94,14 @@ class ClassroomService {
     return classroom
   }
 
+  async getClassroomByCode(code:string):Promise<Classroom>{
+    const classroom = await this.classroomRepository.findOne({ where: { Code: code } })
+    if (!classroom) {
+      throw new Error("Classroom not found")
+    }
+    return classroom
+  }
+
   async getStudentsByClassroom(classroomId:string):Promise<ClassroomStudent[]>{
     const classroomStudents = await this.classroomStudentRepository.find({
       where: { Classroom: { Id: classroomId } },
