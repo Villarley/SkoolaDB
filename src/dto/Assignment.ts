@@ -5,11 +5,21 @@ export class CreateAssignmentDto {
   @Length(1, 50)
   ClassroomId: string
 
+
   @IsNotEmpty()
   @Length(1, 500)
   Instructions: string
 
   @IsNotEmpty()
+  @Length(1, 500)
+  Title: string
+
+  @IsNotEmpty()
   @Length(1, 20)
-  DateToComplete: Date
+  DateToComplete: string
+
+  TeamStepId:string
+
+  PostedBy:string
+
 }

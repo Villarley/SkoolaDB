@@ -17,22 +17,23 @@ const classroomService = new ClassroomService()
 // Route to create a classroom and assign a professor
 router.post("/:professorId", validateJWT, validateMiddleware(CreateClassroomDto), async (req: CreateClassroomRequest, res: Response) => {
   const { professorId } = req.params
-
+  console.log(professorId)
   try {
     const classroom = await classroomService.createClassroom(req.body)
     await classroomService.assignProfessorToClassroom(professorId, classroom)
     res.status(201).json(classroom)
   } catch (error: any) {
+    // console.error(error)
     res.status(500).json({ message: error.message })
   }
 })
 
 // Route for a student to join a classroom
-router.post("/:classroomId/join/:studentId", validateJWT, async (req: JoinClassroomRequest, res: Response) => {
-  const { classroomId, studentId } = req.params
+router.post("/:classroomCode/join/:studentId", validateJWT, async (req: JoinClassroomRequest, res: Response) => {
+  const { classroomCode, studentId } = req.params
 
   try {
-    const classroom = await classroomService.getClassroomById(classroomId)
+    const classroom = await classroomService.getClassroomByCode(classroomCode)
     const classroomStudent = await classroomService.joinClassroom(studentId, classroom)
     res.status(201).json( classroomStudent )
   } catch (error: any) {
@@ -43,7 +44,7 @@ router.post("/:classroomId/join/:studentId", validateJWT, async (req: JoinClassr
 // Route to get classrooms by student
 router.get("/student/:studentId", validateJWT, async (req: GetClassroomsByStudentRequest, res: Response) => {
   const { studentId } = req.params
-
+  console.log("Hola si es este")
   try {
     const classrooms = await classroomService.getClassroomsByStudent(studentId)
     res.status(200).json(classrooms)
@@ -67,7 +68,7 @@ router.get("/professor/:professorId", validateJWT, async (req: GetClassroomsByPr
 // Route to get a specific classroom by ID
 router.get("/:classroomId", validateJWT, async (req: GetClassroomByIdRequest, res: Response) => {
   const { classroomId } = req.params
-
+  console.log("hola soy yo classroom")
   try {
     const classroom = await classroomService.getClassroomById(classroomId)
     res.status(200).json(classroom)

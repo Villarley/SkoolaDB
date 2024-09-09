@@ -9,9 +9,6 @@ export class CreateClassroomDto {
   @Length(1, 50)
   Section: string
 
-  @IsNotEmpty()
-  @Length(1, 20)
-  Code: string
 }
 
 export class JoinClassroomDto {
