@@ -17,4 +17,9 @@ export class CreateAssignmentDto {
   @IsNotEmpty()
   @Length(1, 20)
   DateToComplete: string
+
+  TeamStepId:string
+
+  PostedBy:string
+
 }

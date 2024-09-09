@@ -56,13 +56,46 @@ class ClassroomService {
     }))
   }
 
-  async getClassroomsByProfessor(professorId: string): Promise<Classroom[]> {
-    const classroomProfessors = await this.classroomProfessorRepository.find({ where: { Professor: { Id: professorId } }, relations: ["Classroom"] })
-    return classroomProfessors.map(cp => cp.Classroom)
+  async getClassroomsByProfessor(professorId: string): Promise<{}[]> {
+    const classroomProfessors = await this.classroomProfessorRepository.find({
+      where: { Professor: { Id: professorId } },
+      relations: [
+        "Classroom", 
+        "Classroom.ClassroomProfessors",
+        "Classroom.ClassroomProfessors.Professor",
+        "Classroom.ClassroomProfessors.Professor.User", 
+      ]
+    })
+  console.log(classroomProfessors)
+  return classroomProfessors.map(cp => {
+    const professor = cp.Classroom.ClassroomProfessors[0]?.Professor?.User;
+    return {
+      classroom: {
+        Id: cp.Classroom.Id,
+        Name: cp.Classroom.Name,
+        Section: cp.Classroom.Section,
+        Code: cp.Classroom.Code,
+      },
+      professor: {
+        name: professor ? `${professor.Name} ${professor.LastName1}` : 'No Professor Assigned',
+        email: professor?.Email || 'No Email Provided'
+      }
+    }
+  })
   }
+  
+
 
   async getClassroomById(classroomId: string): Promise<Classroom> {
-    const classroom = await this.classroomRepository.findOne({ where: { Id: classroomId } })
+    const classroom = await this.classroomRepository.findOne({ where: { Id: classroomId }, relations:["ClassroomStudents", "ClassroomStudents.Student", "ClassroomStudents.Student.User"] })
+    if (!classroom) {
+      throw new Error("Classroom not found")
+    }
+    return classroom
+  }
+
+  async getClassroomByCode(code:string):Promise<Classroom>{
+    const classroom = await this.classroomRepository.findOne({ where: { Code: code } })
     if (!classroom) {
       throw new Error("Classroom not found")
     }

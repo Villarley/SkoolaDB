@@ -1,4 +1,4 @@
-import { ManyToOne, Entity, PrimaryGeneratedColumn, JoinColumn, OneToMany } from "typeorm"
+import { ManyToOne, Entity, PrimaryGeneratedColumn, JoinColumn, OneToMany, Column } from "typeorm"
 import { Assignment } from "@/entity/Assignment"
 import { Student } from "../User"
 import Handable from "../Handable/Handable"
@@ -8,6 +8,18 @@ import Handable from "../Handable/Handable"
 class AssignmentStudent {
     @PrimaryGeneratedColumn("uuid")
     Id: string
+
+    @Column({
+        default: false
+    })
+    Handed: Boolean
+
+    @Column({
+        nullable:true,
+        default: null
+    })
+    Grade: Number
+
     @ManyToOne(() => Assignment, assignment => assignment.AssignmentStudents)
     @JoinColumn()
     Assignment: Assignment
@@ -18,5 +30,6 @@ class AssignmentStudent {
     // @OneToMany()
     @OneToMany(() => Handable, handable => handable.AssignmentStudent)
     Handables: Handable[]
+
 }
 export default AssignmentStudent

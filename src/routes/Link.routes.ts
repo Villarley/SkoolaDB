@@ -46,7 +46,6 @@ router.post("/", validateJWT, validateMiddleware(CreateLinkDto), upload.none(), 
       const response = await b2.getUploadUrl({
         bucketId: process.env["B2_BUCKET_ID"] || ""
       })
-      console.log()
       const uploadUrl = response.data.uploadUrl
       const uploadAuthToken = response.data.authorizationToken
 
@@ -56,7 +55,7 @@ router.post("/", validateJWT, validateMiddleware(CreateLinkDto), upload.none(), 
         fileName: `${Date.now()}-${FileName}`,
         data: buffer,
       })
-      console.log(uploadResponse)
+
 
       const publicUrl = `https://f002.backblazeb2.com/file/${process.env["B2_BUCKET_NAME"]}/${uploadResponse.data.fileName}`
 

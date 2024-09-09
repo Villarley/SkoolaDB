@@ -5,7 +5,7 @@ import cors from "cors"
 import dotenv from "dotenv"
 import bodyParser from "body-parser"
 import AppDataSource from "./ormconfig"
-import { AuthRoutes, ClassroomRoutes, AssignmentRoutes, LinkRoutes, HandableRoutes } from "./routes"
+import { AuthRoutes, ClassroomRoutes, AssignmentRoutes, LinkRoutes, HandableRoutes, ProjectRoutes, TeamRoutes, StepRoutes, PostRoutes, CommentRoutes, MedalRoutes } from "./routes"
 
 dotenv.config()
 
@@ -18,7 +18,14 @@ class Server {
         classroom: `${this.Path}/Classroom`,
         assignment: `${this.Path}/Assignment`,
         link: `${this.Path}/Link`,
-        handable: `${this.Path}/Handable`
+        handable: `${this.Path}/Handable`,
+        project: `${this.Path}/Project`,
+        team: `${this.Path}/Team`,
+        step: `${this.Path}/Step`,
+        post: `${this.Path}/Post`,
+        comment: `${this.Path}/Comment`,
+        medal: `${this.Path}/Medal`
+        
     }
 
     constructor() {
@@ -30,17 +37,23 @@ class Server {
     }
 
     private middlewares() {
-        this.app.use(cors())
-        this.app.use(express.json({ limit: "200mb" }))
-        this.app.use(bodyParser.urlencoded({ limit: "200mb", extended: true }))
+        this.app.use ( cors() )
+        this.app.use ( express.json({ limit: "200mb" }) )
+        this.app.use ( bodyParser.urlencoded({ limit: "200mb", extended: true }) )
     }
 
     private routes() {
-        this.app.use(this.apiPaths.link, LinkRoutes)
-        this.app.use(this.apiPaths.auth, AuthRoutes)
-        this.app.use(this.apiPaths.handable, HandableRoutes)
-        this.app.use(this.apiPaths.classroom, ClassroomRoutes)
-        this.app.use(this.apiPaths.assignment, AssignmentRoutes)
+        this.app.use ( this.apiPaths.link, LinkRoutes )
+        this.app.use ( this.apiPaths.auth, AuthRoutes )
+        this.app.use ( this.apiPaths.handable, HandableRoutes )
+        this.app.use ( this.apiPaths.classroom, ClassroomRoutes )
+        this.app.use ( this.apiPaths.assignment, AssignmentRoutes )
+        this.app.use ( this.apiPaths.project, ProjectRoutes )
+        this.app.use ( this.apiPaths.team, TeamRoutes )
+        this.app.use ( this.apiPaths.step, StepRoutes )
+        this.app.use ( this.apiPaths.post, PostRoutes )
+        this.app.use ( this.apiPaths.comment, CommentRoutes )
+        this.app.use ( this.apiPaths.medal, MedalRoutes )
     }
 
     private async databaseConnection() {

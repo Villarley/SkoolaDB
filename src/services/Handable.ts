@@ -20,6 +20,12 @@ class HandableService {
     return handable
   }
 
+  async getHandableById2(Id:string):Promise<Handable>{
+    const handable = await this.handableRepository.findOne({ where:{Id}, relations:["AssignmentStudent", "AssignmentStudent.Student", "AssignmentStudent.Assignment"] })
+    if(!handable)throw new Error("Handable not found")
+    return handable
+  }
+
   async createHandable(assignmentStudent: AssignmentStudent): Promise<Handable> {
 
     const handable = this.handableRepository.create({
@@ -36,6 +42,11 @@ class HandableService {
       throw new Error("AssignmentStudent not found")
     }
     return assignmentStudent
+  }
+
+  async updateHandable(handable: Handable, newHandable: Partial<Handable>):Promise<Handable>{
+    const updatedHandable = this.handableRepository.merge(handable, newHandable)
+    return await this.handableRepository.save(updatedHandable)
   }
 }
 

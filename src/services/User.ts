@@ -1,11 +1,11 @@
 import { Repository } from "typeorm"
 import * as bcrypt from "bcrypt"
 import { User } from "@/entity/User"
-import { UserInput } from "@/interface/User"
 import  DataSource  from "@/ormconfig"
 import { generateToken } from "@/utils/jwt"
 import StudentService from "@/services/Student"
 import ProfessorService from "@/services/Professor"
+import { UserInputDto } from "@/dto/User"
 
 
 class UserService {
@@ -33,8 +33,15 @@ class UserService {
     return bcrypt.compareSync(password, user.Password)
   }
 
-  async getUserById(Id: string): Promise<User | null> {
-    return await this.userRepository.findOneBy({ Id })
+  async hashPassword (password:string):Promise<string>{
+    const hashedPassword = await bcrypt.hash(password, 10)
+    return hashedPassword
+  }
+
+  async getUserById(Id: string): Promise<User> {
+    const user = await this.userRepository.findOneBy({ Id })
+    if(!user)throw new Error("No user found")
+    return user
   }
 
   async getUserByName(name: string): Promise<User | null> {
@@ -56,15 +63,13 @@ class UserService {
   async getAllUsersWithCount(): Promise<[User[], number]> {
     return await this.userRepository.findAndCount()
   }
-  async createUser(userInput: UserInput): Promise<User> {
-      //hashing password
-      const hashedPassword = await bcrypt.hash(userInput.Password, 10)
-      userInput.Password = hashedPassword
+  async createUser(userInput:UserInputDto): Promise<User> {
       const user = this.userRepository.create(userInput)
       const savedUser = this.userRepository.save(user)
       return savedUser
   }
-  async login(email: string, password: string): Promise<{ user: User, token: string, roleId: string }> {
+
+  async login(email: string, password: string): Promise<{ user: User, token: string, roleId: string, role: string }> {
     const user = await this.getUserByEmail(email)
 
     if (!user || !(await this.validatePassword(user, password))) {
@@ -76,10 +81,12 @@ class UserService {
     const student = await this.studentService.getStudentByPersonId(user.Id)
     const professor = await this.professorService.getProfessorByPersonId(user.Id)
     const roleId = student ? student.Id : professor ? professor.Id : "null"
-    return { user, token, roleId }
+    console.log("hola")
+    const role = student ? "student" : professor ? "professor" : "null"
+    return { user, token, roleId, role }
   }
 
-  async loginWithGoogle(Email: string): Promise<{ user: User, token: string, roleId: string }> {
+  async loginWithGoogle(Email: string): Promise<{ user: User, token: string, roleId: string, role: string }> {
     const user = await this.getUserByEmail(Email)
     if (!user) throw new Error("User not found")
     const token = await this.generateToken(user)
@@ -88,9 +95,12 @@ class UserService {
     const student = await this.studentService.getStudentByPersonId(user.Id)
     const professor = await this.professorService.getProfessorByPersonId(user.Id)
     const roleId = student ? student.Id : professor ? professor.Id : "null"
+    console.log("hola")
+    const role: string = student ? "student" : professor ? "professor" : "null"
 
-    return { user, token, roleId }
+    return { user, token, roleId, role }
   }
+
 }
 
 export default UserService
