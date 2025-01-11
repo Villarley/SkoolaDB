@@ -5,7 +5,7 @@ import cors from "cors"
 import dotenv from "dotenv"
 import bodyParser from "body-parser"
 import AppDataSource from "./ormconfig"
-import { AuthRoutes, ClassroomRoutes, AssignmentRoutes, LinkRoutes, HandableRoutes, ProjectRoutes, TeamRoutes, StepRoutes } from "./routes"
+import { AuthRoutes, ClassroomRoutes, AssignmentRoutes, LinkRoutes, HandableRoutes, ProjectRoutes, TeamRoutes, StepRoutes, PostRoutes, CommentRoutes, MedalRoutes } from "./routes"
 
 dotenv.config()
 
@@ -21,7 +21,10 @@ class Server {
         handable: `${this.Path}/Handable`,
         project: `${this.Path}/Project`,
         team: `${this.Path}/Team`,
-        step: `${this.Path}/Step`
+        step: `${this.Path}/Step`,
+        post: `${this.Path}/Post`,
+        comment: `${this.Path}/Comment`,
+        medal: `${this.Path}/Medal`
         
     }
 
@@ -48,6 +51,9 @@ class Server {
         this.app.use ( this.apiPaths.project, ProjectRoutes )
         this.app.use ( this.apiPaths.team, TeamRoutes )
         this.app.use ( this.apiPaths.step, StepRoutes )
+        this.app.use ( this.apiPaths.post, PostRoutes )
+        this.app.use ( this.apiPaths.comment, CommentRoutes )
+        this.app.use ( this.apiPaths.medal, MedalRoutes )
     }
 
     private async databaseConnection() {

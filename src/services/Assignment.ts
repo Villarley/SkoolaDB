@@ -19,7 +19,8 @@ class AssignmentService {
   }
 
   async getAssignmentById(Id:string):Promise<Assignment>{
-    const assignment = await this.assignmentRepository.findOne({ where:{Id} })
+    const assignment = await this.assignmentRepository.findOne({ where:{Id}, relations:[
+      "Classroom.ClassroomProfessors.Professor.User", ""] })
     if(!assignment)throw new Error("Assignment not founf")
     return assignment
   }
@@ -92,11 +93,22 @@ class AssignmentService {
 
     return assignmentStudents.map(as => as.Assignment)
   }
+
+  async getPendingAssignmentsByStudent(Id:string): Promise<AssignmentStudent[]> {
+    const assignmentStudents = await this.assignmentStudentRepository.find({
+      where: { Student: { Id } },
+      relations: ["Assignment", "Assignment.Classroom"]
+    })
+    if(!assignmentStudents) throw new Error("Not found")
+    return assignmentStudents
+  }
+
+
   async getAssignmentStudentsByClassroom(classroomId: string): Promise<AssignmentStudent[]> {
     const assignmentStudents = await this.assignmentStudentRepository.find({
       where: {
         Assignment: {
-          Classroom: { Id: classroomId }
+          Classroom: { Id: classroomId },
         }
       },
       relations: ["Student", "Assignment", "Student.User"],
@@ -116,7 +128,7 @@ class AssignmentService {
     return assignmentStudents
   }
   async getAssignmentStudentById2(Id: string): Promise<AssignmentStudent> {
-    const assignmentStudent = await this.assignmentStudentRepository.findOne({ where: { Id }, relations: ["Handables", "Handables.Links"] })
+    const assignmentStudent = await this.assignmentStudentRepository.findOne({ where: { Id }, relations: ["Handables", "Handables.Links", "Assignment"] })
     if (!assignmentStudent) throw new Error("AssignmentStudent not found")
 
     for (const handable of assignmentStudent.Handables) {
@@ -150,6 +162,32 @@ class AssignmentService {
 
     return response
   }
+
+  async getAssignmentStudentsByAssignmentId(assignmentId: string): Promise<AssignmentStudent[]> {
+    
+    const assignmentStudents = await this.assignmentStudentRepository.find({
+      where: { Assignment: { Id: assignmentId } },
+      relations: ["Assignment", "Student", "Handables", "Student.User"]
+    })
+    console.log(assignmentStudents)
+    
+
+    return assignmentStudents
+  }
+
+  async getAssignmentStudentByAssignmentIdAndStudentId(assignmentId: string, studentId: string): Promise<AssignmentStudent | null> {
+    const assignmentStudent = await this.assignmentStudentRepository.findOne({
+      where: {
+        Assignment: { Id: assignmentId },
+        Student: { Id: studentId },
+      },
+      relations: ["Assignment", "Student", "Handables"],
+    });
+    console.log(studentId)
+
+    return assignmentStudent;
+  }
+
 }
 
 export default AssignmentService

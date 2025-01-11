@@ -10,7 +10,7 @@ export interface CreateClassroomRequest extends Request {
 
 export interface JoinClassroomRequest extends Request {
   params: {
-    classroomId: string
+    classroomCode: string
     studentId: string
   }
   body: JoinClassroomDto
