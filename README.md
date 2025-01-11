@@ -8,3 +8,4 @@ Skoola, built on Node.js and TypeScript (TS), optimizes teamwork in scholarly pr
 
 - [@villarley](https://www.github.com/villarley)
 
+thank you
